@@ -1,7 +1,7 @@
-## 3Scan
+# 3Scan
 3Scan is a three dimensional LIDAR scanner.
 
-### Hardware
+## Hardware
 Based on ESP32 and Sweep Scanse LIDAR.
 
 ![Scheme](hardware/ThreeScan_schem.png)
