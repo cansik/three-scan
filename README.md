@@ -3,3 +3,7 @@
 
 ### Hardware
 Based on ESP32 and Sweep Scanse LIDAR.
+
+![Scheme](hardware/ThreeScan_schem.png)
+
+*Hardware Scheme*
