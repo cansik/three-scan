@@ -67,15 +67,15 @@ void setup() {
 
     //StatusLed::turnOn();
 
+    // setup sd card
+    sdCardStorage.setup();
+    sdCardStorage.printSDInfo();
+
     // setup random seed
     randomSeed(static_cast<unsigned long>(analogRead(0)));
 
     // load settings
     app.loadFromEEPROM();
-
-    // setup sd card
-    sdCardStorage.setup();
-    sdCardStorage.printSDInfo();
 
     // setup controllers
     for (auto &controller : controllers) {
@@ -90,13 +90,6 @@ void setup() {
 
     Serial.println("setup finished!");
     sendRefresh();
-
-    pinMode(23, INPUT_PULLUP);
-    SPI.begin(18, 19, 23);
-    if (!SD.begin(5)) {
-        Serial.println("Card Mount Failed");
-        return;
-    }
 }
 
 void loop() {

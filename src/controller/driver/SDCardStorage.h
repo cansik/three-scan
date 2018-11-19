@@ -17,7 +17,7 @@ private:
     uint8_t csPin;
 
 public:
-    explicit SDCardStorage(uint8_t csPin, uint8_t misoPin = 23, uint8_t mosiPin = 19, uint8_t sckPin = 18);
+    explicit SDCardStorage(uint8_t csPin, uint8_t misoPin = 19, uint8_t mosiPin = 23, uint8_t sckPin = 18);
 
     void setup();
 

@@ -15,12 +15,16 @@ SDCardStorage::SDCardStorage(uint8_t csPin, uint8_t misoPin, uint8_t mosiPin, ui
 
 
 void SDCardStorage::setup() {
+    Serial.printf("SCK: %d, MISO: %d, MOSI: %d, CS: %d\n", sckPin, misoPin, mosiPin, csPin);
+
+    pinMode(sckPin, INPUT_PULLUP);
     pinMode(misoPin, INPUT_PULLUP);
     pinMode(mosiPin, INPUT_PULLUP);
-    pinMode(sckPin, INPUT_PULLUP);
     pinMode(csPin, INPUT_PULLUP);
 
-    SPI.begin(misoPin, mosiPin, sckPin, csPin);
+    delay(10);
+
+    SPI.begin(sckPin, misoPin, mosiPin, csPin);
     if (!SD.begin(csPin)) {
         Serial.println("Card Mount Failed");
         return;
