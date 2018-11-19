@@ -15,6 +15,8 @@ ThreeScanApp::ThreeScanApp(StoragePtr storage, SweepESP32Ptr sweep, PreciseServo
 void ThreeScanApp::setup() {
     BaseController::setup();
 
+    scanSettings = ScanSettings();
+
     // setup servo
     Serial.println("setting up servo...");
     servo->setup();
@@ -35,6 +37,59 @@ void ThreeScanApp::setup() {
 
 void ThreeScanApp::loop() {
     BaseController::loop();
+
+    if (scanning && scanTimer.elapsed())
+        runScan();
+}
+
+void ThreeScanApp::startScan() {
+    scanning = true;
+    currentAngle = scanSettings.startAngle;
+
+    Serial.println("setting sweep settings...");
+    sweep->setMotorSpeed(MOTOR_SPEED_CODE_5_HZ);
+    sweep->setSampleRate(SAMPLE_RATE_CODE_500_HZ);
+
+    Serial.println("waiting for sweep to be ready...");
+    sweep->waitUntilMotorReady();
+    sweep->startScanning();
+
+    Serial.println("start scanning");
+}
+
+void ThreeScanApp::endScan() {
+    sweep->stopScanning();
+    Serial.println("finished scanning!");
+
+    scanning = false;
+}
+
+void ThreeScanApp::runScan() {
+    // move
+    servo->movePrecise(currentAngle);
+
+    // check if scan is ready
+    auto success = false;
+    ScanPacket reading = sweep->getReading(success);
+
+    if (success) {
+        if (reading.isSync()) {
+            Serial.println("first reading!");
+            pointCounter = 0;
+        }
+
+        Serial.printf("%d. (%f°):\t%f°\t%d cm", pointCounter, currentAngle, reading.getAngleDegrees(),
+                      reading.getDistanceCentimeters());
+
+        // update
+        currentAngle += scanSettings.angleStep;
+    }
+
+    // check end condition
+    if (currentAngle > scanSettings.endAngle) {
+        endScan();
+    }
+
 }
 
 void ThreeScanApp::loadFromEEPROM() {

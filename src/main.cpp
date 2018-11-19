@@ -100,6 +100,10 @@ void setup() {
 
     Serial.println("setup finished!");
     sendRefresh();
+
+
+    delay(3000);
+    app.startScan();
 }
 
 void loop() {

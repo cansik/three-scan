@@ -15,8 +15,6 @@ SDCardStorage::SDCardStorage(uint8_t csPin, uint8_t misoPin, uint8_t mosiPin, ui
 
 
 void SDCardStorage::setup() {
-    Serial.printf("SCK: %d, MISO: %d, MOSI: %d, CS: %d\n", sckPin, misoPin, mosiPin, csPin);
-
     pinMode(sckPin, INPUT_PULLUP);
     pinMode(misoPin, INPUT_PULLUP);
     pinMode(mosiPin, INPUT_PULLUP);
@@ -189,6 +187,8 @@ void SDCardStorage::testFileIO(fs::FS &fs, const char *path) {
 }
 
 void SDCardStorage::printSDInfo() {
+    Serial.printf("SCK: %d, MISO: %d, MOSI: %d, CS: %d\n", sckPin, misoPin, mosiPin, csPin);
+
     uint8_t cardType = SD.cardType();
 
     if (cardType == CARD_NONE) {

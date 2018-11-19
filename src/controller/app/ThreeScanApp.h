@@ -6,6 +6,8 @@
 #include <controller/storage/SDCardStorage.h>
 #include <driver/sweep/SweepESP32.h>
 #include <driver/motor/PreciseServo.h>
+#include <util/Timer.h>
+#include <model/ScanSettings.h>
 #include "EEPROM.h"
 #include "model/AppSettings.h"
 #include "controller/BaseController.h"
@@ -20,13 +22,19 @@ private:
     typedef PreciseServo *PreciseServoPtr;
 
     AppSettings settings;
+    ScanSettings scanSettings;
 
     StoragePtr storage;
-
     SweepESP32Ptr sweep;
-
     PreciseServoPtr servo;
 
+    Timer scanTimer = Timer(33);
+
+    boolean scanning = false;
+    float currentAngle = 0.0f;
+    int pointCounter = 0;
+
+    void runScan();
 
 public:
     ThreeScanApp(StoragePtr storage, SweepESP32Ptr sweep, PreciseServoPtr servo);
@@ -42,6 +50,10 @@ public:
     void setup() override;
 
     void loop() override;
+
+    void startScan();
+
+    void endScan();
 };
 
 

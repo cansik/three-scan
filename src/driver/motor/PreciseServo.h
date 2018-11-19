@@ -9,6 +9,9 @@
 #include <cstdint>
 #include <Servo.h>
 
+#define SERVO_MIN_PULSE 500
+#define SERVO_MAX_PULSE 2570
+
 class PreciseServo {
 private:
     uint8_t devicePin;
@@ -22,6 +25,8 @@ public:
     void reset();
 
     void move(uint8_t angle);
+
+    void movePrecise(float angle);
 
     void movePulse(uint16_t pulseWidth);
 };

@@ -11,7 +11,7 @@ SweepESP32::SweepESP32(uint8_t rxPin, uint8_t txPin, HardwareSerial serial) : Sw
 }
 
 void SweepESP32::open() {
-    sweepSerial.begin(9600, SERIAL_8N1, rxPin, txPin, false);
+    sweepSerial.begin(115200, SERIAL_8N1, rxPin, txPin, false);
 }
 
 void SweepESP32::close() {
