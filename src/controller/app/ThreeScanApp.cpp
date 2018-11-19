@@ -16,13 +16,19 @@ void ThreeScanApp::setup() {
     BaseController::setup();
 
     // setup servo
+    Serial.println("setting up servo...");
     servo->setup();
+
+    servo->movePulse(1500);
+    delay(500);
     servo->reset();
 
     // setup sweep
+    Serial.println("setting up sweep...");
     sweep->open();
 
     // setup sd card
+    Serial.println("setting up sd card...");
     storage->setup();
     storage->printSDInfo();
 }
