@@ -5,8 +5,30 @@
 #include "ThreeScanApp.h"
 #include "util/MathUtils.h"
 
-ThreeScanApp::ThreeScanApp() : BaseController() {
+ThreeScanApp::ThreeScanApp(StoragePtr storage, SweepESP32Ptr sweep, PreciseServoPtr servo) {
     this->settings = AppSettings();
+    this->storage = storage;
+    this->sweep = sweep;
+    this->servo = servo;
+}
+
+void ThreeScanApp::setup() {
+    BaseController::setup();
+
+    // setup servo
+    servo->setup();
+    servo->reset();
+
+    // setup sweep
+    sweep->open();
+
+    // setup sd card
+    storage->setup();
+    storage->printSDInfo();
+}
+
+void ThreeScanApp::loop() {
+    BaseController::loop();
 }
 
 void ThreeScanApp::loadFromEEPROM() {
@@ -50,12 +72,4 @@ AppSettings &ThreeScanApp::getSettings() {
 
 void ThreeScanApp::loadDefaultSettings() {
     settings = AppSettings();
-}
-
-void ThreeScanApp::setup() {
-    BaseController::setup();
-}
-
-void ThreeScanApp::loop() {
-    BaseController::loop();
 }

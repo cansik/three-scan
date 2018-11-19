@@ -6,6 +6,9 @@
 #include <SD.h>
 #include <controller/storage/SDCardStorage.h>
 #include <util/StatusLed.h>
+#include <driver/Sweep/Sweep.h>
+#include <driver/sweep/SweepESP32.h>
+#include <driver/motor/PreciseServo.h>
 
 #include "controller/BaseController.h"
 #include "controller/app/ThreeScanApp.h"
@@ -16,6 +19,13 @@
 
 // global
 #define SD_SELECT_PIN 12
+
+#define SERVO_PIN 4
+
+#define SWEEP_HW_SERIAL 1
+
+#define SWEEP_TX 26
+#define SWEEP_RX 27
 
 // serial
 #define BAUD_RATE 115200
@@ -35,20 +45,24 @@
 // typedefs
 typedef BaseController *BaseControllerPtr;
 
-// variables
-auto app = ThreeScanApp();
-auto sdCardStorage = SDCardStorage(SD_SELECT_PIN);
-
 // controllers
 auto network = NetworkController(DEVICE_NAME, SSID_NAME, SSID_PASSWORD, WIFI_AP);
 auto ota = OTAController(DEVICE_NAME, OTA_PASSWORD, OTA_PORT);
 auto osc = OscController(OSC_IN_PORT, OSC_OUT_PORT);
+
+// variables
+auto sdCardStorage = SDCardStorage(SD_SELECT_PIN);
+auto sweep = SweepESP32(SWEEP_RX, SWEEP_TX, HardwareSerial(SWEEP_HW_SERIAL));
+auto servo = PreciseServo(SERVO_PIN);
+
+auto app = ThreeScanApp(&sdCardStorage, &sweep, &servo);
 
 // controller list
 BaseControllerPtr controllers[] = {
         &network,
         &ota,
         &osc,
+        &app
 };
 
 // methods
@@ -60,16 +74,12 @@ void setup() {
     Serial.begin(BAUD_RATE);
 
     // setup status led
-    //StatusLed::setup();
+    StatusLed::setup();
 
     // wait some seconds for debugging
     delay(5000);
 
-    //StatusLed::turnOn();
-
-    // setup sd card
-    sdCardStorage.setup();
-    sdCardStorage.printSDInfo();
+    StatusLed::turnOn();
 
     // setup random seed
     randomSeed(static_cast<unsigned long>(analogRead(0)));

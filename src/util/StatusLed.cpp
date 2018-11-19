@@ -32,7 +32,14 @@ void StatusLed::turnOff() {
 
 void StatusLed::setBrightness(uint8_t brightness) {
     StatusLed::brightness = brightness;
-    ledcAnalogWrite(StatusLed::ledPin, StatusLed::brightness);
+
+    if (brightness > 128) {
+        digitalWrite(ledPin, HIGH);
+    } else {
+        digitalWrite(ledPin, LOW);
+    }
+
+    //ledcAnalogWrite(StatusLed::ledPin, StatusLed::brightness);
 }
 
 void StatusLed::ledcAnalogWrite(uint8_t channel, uint32_t value, uint32_t valueMax) {
