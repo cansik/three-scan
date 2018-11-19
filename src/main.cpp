@@ -4,11 +4,11 @@
 #include <inttypes.h>
 #include <SPI.h>
 #include <SD.h>
-#include <controller/driver/SDCardStorage.h>
+#include <controller/storage/SDCardStorage.h>
 #include <util/StatusLed.h>
 
 #include "controller/BaseController.h"
-#include "model/ThreeScanApp.h"
+#include "controller/app/ThreeScanApp.h"
 #include "controller/network/NetworkController.h"
 #include "controller/network/OTAController.h"
 #include "controller/network/OscController.h"

@@ -3,9 +3,9 @@
 //
 
 #include "ThreeScanApp.h"
-#include "../util/MathUtils.h"
+#include "util/MathUtils.h"
 
-ThreeScanApp::ThreeScanApp() {
+ThreeScanApp::ThreeScanApp() : BaseController() {
     this->settings = AppSettings();
 }
 
@@ -50,4 +50,12 @@ AppSettings &ThreeScanApp::getSettings() {
 
 void ThreeScanApp::loadDefaultSettings() {
     settings = AppSettings();
+}
+
+void ThreeScanApp::setup() {
+    BaseController::setup();
+}
+
+void ThreeScanApp::loop() {
+    BaseController::loop();
 }
