@@ -2,6 +2,10 @@
 #include <Wire.h>
 #include <ESPmDNS.h>
 #include <inttypes.h>
+#include <SPI.h>
+#include <SD.h>
+#include <controller/driver/SDCardStorage.h>
+#include <util/StatusLed.h>
 
 #include "controller/BaseController.h"
 #include "model/ThreeScanApp.h"
@@ -11,6 +15,7 @@
 #include "util/MathUtils.h"
 
 // global
+#define SD_SELECT_PIN 12
 
 // serial
 #define BAUD_RATE 115200
@@ -32,6 +37,7 @@ typedef BaseController *BaseControllerPtr;
 
 // variables
 auto app = ThreeScanApp();
+auto sdCardStorage = SDCardStorage(SD_SELECT_PIN);
 
 // controllers
 auto network = NetworkController(DEVICE_NAME, SSID_NAME, SSID_PASSWORD, WIFI_AP);
@@ -53,14 +59,23 @@ void sendRefresh();
 void setup() {
     Serial.begin(BAUD_RATE);
 
+    // setup status led
+    //StatusLed::setup();
+
     // wait some seconds for debugging
     delay(5000);
+
+    //StatusLed::turnOn();
 
     // setup random seed
     randomSeed(static_cast<unsigned long>(analogRead(0)));
 
     // load settings
     app.loadFromEEPROM();
+
+    // setup sd card
+    sdCardStorage.setup();
+    sdCardStorage.printSDInfo();
 
     // setup controllers
     for (auto &controller : controllers) {
@@ -75,6 +90,13 @@ void setup() {
 
     Serial.println("setup finished!");
     sendRefresh();
+
+    pinMode(23, INPUT_PULLUP);
+    SPI.begin(18, 19, 23);
+    if (!SD.begin(5)) {
+        Serial.println("Card Mount Failed");
+        return;
+    }
 }
 
 void loop() {
