@@ -22,10 +22,8 @@
 
 #define SERVO_PIN 4
 
-#define SWEEP_HW_SERIAL 1
-
-#define SWEEP_TX 26
 #define SWEEP_RX 27
+#define SWEEP_TX 26
 
 // serial
 #define BAUD_RATE 115200
@@ -52,7 +50,7 @@ auto osc = OscController(OSC_IN_PORT, OSC_OUT_PORT);
 
 // variables
 auto sdCardStorage = SDCardStorage(SD_SELECT_PIN);
-auto sweep = SweepESP32(SWEEP_RX, SWEEP_TX, HardwareSerial(SWEEP_HW_SERIAL));
+auto sweep = SweepESP32(SWEEP_RX, SWEEP_TX);
 auto servo = PreciseServo(SERVO_PIN);
 
 auto app = ThreeScanApp(&sdCardStorage, &sweep, &servo);

@@ -46,7 +46,11 @@ void ThreeScanApp::startScan() {
     scanning = true;
     currentAngle = scanSettings.startAngle;
 
+    Serial.println("resetting sweep...");
+    sweep->reset();
+
     Serial.println("setting sweep settings...");
+    Serial.printf("current motor speed: %d\n", sweep->getMotorSpeed());
     sweep->setMotorSpeed(MOTOR_SPEED_CODE_5_HZ);
     sweep->setSampleRate(SAMPLE_RATE_CODE_500_HZ);
 
@@ -78,7 +82,7 @@ void ThreeScanApp::runScan() {
             pointCounter = 0;
         }
 
-        Serial.printf("%d. (%f°):\t%f°\t%d cm", pointCounter, currentAngle, reading.getAngleDegrees(),
+        Serial.printf("%d. (%f°):\t%f°\t%d cm\n", pointCounter, currentAngle, reading.getAngleDegrees(),
                       reading.getDistanceCentimeters());
 
         // update
