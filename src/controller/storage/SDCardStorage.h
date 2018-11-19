@@ -16,6 +16,8 @@ private:
     uint8_t sckPin;
     uint8_t csPin;
 
+    boolean connected = false;
+
 public:
     explicit SDCardStorage(uint8_t csPin, uint8_t misoPin = 19, uint8_t mosiPin = 23, uint8_t sckPin = 18);
 
@@ -40,6 +42,8 @@ public:
     void deleteFile(fs::FS &fs, const char *path);
 
     void testFileIO(fs::FS &fs, const char *path);
+
+    boolean getConnected() const;
 };
 
 

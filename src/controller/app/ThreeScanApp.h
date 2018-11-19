@@ -30,9 +30,10 @@ private:
 
     Timer scanTimer = Timer(33);
 
-    boolean scanning = false;
+    bool scanning = false;
     float currentAngle = 0.0f;
     int pointCounter = 0;
+    bool waitForSync = false;
 
     void runScan();
 

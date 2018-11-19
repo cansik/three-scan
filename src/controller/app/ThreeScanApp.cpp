@@ -28,6 +28,7 @@ void ThreeScanApp::setup() {
     // setup sweep
     Serial.println("setting up sweep...");
     sweep->open();
+    //sweep->setMotorSpeed(MOTOR_SPEED_CODE_0_HZ);
 
     // setup sd card
     Serial.println("setting up sd card...");
@@ -38,12 +39,13 @@ void ThreeScanApp::setup() {
 void ThreeScanApp::loop() {
     BaseController::loop();
 
-    if (scanning && scanTimer.elapsed())
+    if (scanning)
         runScan();
 }
 
 void ThreeScanApp::startScan() {
     scanning = true;
+    waitForSync = true;
     currentAngle = scanSettings.startAngle;
 
     Serial.println("resetting sweep...");
@@ -51,8 +53,8 @@ void ThreeScanApp::startScan() {
 
     Serial.println("setting sweep settings...");
     Serial.printf("current motor speed: %d\n", sweep->getMotorSpeed());
-    sweep->setMotorSpeed(MOTOR_SPEED_CODE_5_HZ);
-    sweep->setSampleRate(SAMPLE_RATE_CODE_500_HZ);
+    sweep->setMotorSpeed(MOTOR_SPEED_CODE_1_HZ);
+    sweep->setSampleRate(SAMPLE_RATE_CODE_1000_HZ);
 
     Serial.println("waiting for sweep to be ready...");
     sweep->waitUntilMotorReady();
@@ -63,6 +65,8 @@ void ThreeScanApp::startScan() {
 
 void ThreeScanApp::endScan() {
     sweep->stopScanning();
+    servo->reset();
+    sweep->setMotorSpeed(MOTOR_SPEED_CODE_0_HZ);
     Serial.println("finished scanning!");
 
     scanning = false;
@@ -78,19 +82,31 @@ void ThreeScanApp::runScan() {
 
     if (success) {
         if (reading.isSync()) {
-            Serial.println("first reading!");
+            Serial.println("sync");
             pointCounter = 0;
+
+            if (waitForSync) {
+                waitForSync = false;
+
+                // update x angle
+                currentAngle += scanSettings.angleStep;
+            } else {
+                waitForSync = true;
+                sweep->stopScanning();
+                sweep->startScanning();
+            }
         }
 
-        Serial.printf("%d. (%f°):\t%f°\t%d cm\n", pointCounter, currentAngle, reading.getAngleDegrees(),
-                      reading.getDistanceCentimeters());
+        if (waitForSync)
+            return;
 
-        // update
-        currentAngle += scanSettings.angleStep;
+        Serial.printf("%d. (%2f°):\t%2f°\t%d cm\n", pointCounter, currentAngle, reading.getAngleDegrees(),
+                      reading.getDistanceCentimeters());
+        pointCounter++;
     }
 
     // check end condition
-    if (currentAngle > scanSettings.endAngle) {
+    if (currentAngle >= scanSettings.endAngle) {
         endScan();
     }
 

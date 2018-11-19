@@ -25,8 +25,11 @@ void SDCardStorage::setup() {
     SPI.begin(sckPin, misoPin, mosiPin, csPin);
     if (!SD.begin(csPin)) {
         Serial.println("Card Mount Failed");
+        connected = false;
         return;
     }
+
+    connected = true;
 }
 
 void SDCardStorage::listDir(fs::FS &fs, const char *dirname, uint8_t levels) {
@@ -209,4 +212,8 @@ void SDCardStorage::printSDInfo() {
 
     uint64_t cardSize = SD.cardSize() / (1024 * 1024);
     Serial.printf("SD Card Size: %lluMB\n", cardSize);
+}
+
+boolean SDCardStorage::getConnected() const {
+    return connected;
 }
