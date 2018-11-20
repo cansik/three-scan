@@ -27,6 +27,8 @@
 #define PWR_PIN_1 15
 #define PWR_PIN_2 5
 
+#define DEBUG_BTN_PIN 14
+
 // serial
 #define BAUD_RATE 115200
 
@@ -41,6 +43,8 @@
 
 #define OSC_OUT_PORT 9000
 #define OSC_IN_PORT 8000
+
+bool debugButtonState = false;
 
 // typedefs
 typedef BaseController *BaseControllerPtr;
@@ -70,8 +74,13 @@ void handleOsc(OSCMessage &msg);
 
 void sendRefresh();
 
+void checkDebugButton();
+
 void setup() {
     Serial.begin(BAUD_RATE);
+
+    // setup debug btn
+    pinMode(DEBUG_BTN_PIN, INPUT_PULLDOWN);
 
     // setup status led
     StatusLed::setup();
@@ -100,16 +109,32 @@ void setup() {
 
     Serial.println("setup finished!");
     sendRefresh();
-
-    delay(3000);
-
-    app.startScan();
 }
 
 void loop() {
     // loop controllers
     for (auto &controller : controllers) {
         controller->loop();
+
+        // btn
+        checkDebugButton();
+    }
+}
+
+void checkDebugButton() {
+    auto state = digitalRead(DEBUG_BTN_PIN);
+
+    if (state && !debugButtonState) {
+        // turns on
+        debugButtonState = true;
+
+        Serial.println("debug button pressed!");
+        app.startScan();
+    }
+
+    if (!state && debugButtonState) {
+        // turns off
+        debugButtonState = false;
     }
 }
 

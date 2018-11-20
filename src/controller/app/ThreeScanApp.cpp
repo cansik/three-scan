@@ -79,8 +79,8 @@ void ThreeScanApp::endScan() {
 
     // store data
     if (storage->isConnected()) {
-        Serial.println("preparing data...");
-        storage->writeString("/lsc2.txt", data);
+        Serial.print("writing data...");
+        storage->writeString("/juan2.txt", data, true);
         Serial.println("done!");
 
         StatusLed::turnOff();
