@@ -24,6 +24,8 @@
 
 #define SWEEP_RX 27
 #define SWEEP_TX 26
+#define PWR_PIN_1 15
+#define PWR_PIN_2 5
 
 // serial
 #define BAUD_RATE 115200
@@ -50,7 +52,7 @@ auto osc = OscController(OSC_IN_PORT, OSC_OUT_PORT);
 
 // variables
 auto sdCardStorage = SDCardStorage(SD_SELECT_PIN);
-auto sweep = SweepESP32(SWEEP_RX, SWEEP_TX);
+auto sweep = SweepESP32(SWEEP_RX, SWEEP_TX, PWR_PIN_1, PWR_PIN_2);
 auto servo = PreciseServo(SERVO_PIN);
 
 auto app = ThreeScanApp(&sdCardStorage, &sweep, &servo);
@@ -77,7 +79,7 @@ void setup() {
     // wait some seconds for debugging
     delay(5000);
 
-    StatusLed::turnOn();
+    StatusLed::turnOff();
 
     // setup random seed
     randomSeed(static_cast<unsigned long>(analogRead(0)));
@@ -99,8 +101,8 @@ void setup() {
     Serial.println("setup finished!");
     sendRefresh();
 
-
     delay(3000);
+
     app.startScan();
 }
 
@@ -113,8 +115,8 @@ void loop() {
 
 void handleOsc(OSCMessage &msg) {
     // global
-    msg.dispatch("/threescan/hello", [](OSCMessage &msg) {
-        auto test = msg.getFloat(0);
+    msg.dispatch("/threescan/start", [](OSCMessage &msg) {
+        app.startScan();
     });
 
     sendRefresh();

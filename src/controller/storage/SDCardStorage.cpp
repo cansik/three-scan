@@ -105,6 +105,7 @@ void SDCardStorage::writeFile(fs::FS &fs, const char *path, const char *message)
         Serial.println("Failed to open file for writing");
         return;
     }
+
     if (file.print(message)) {
         Serial.println("File written");
     } else {
@@ -214,6 +215,32 @@ void SDCardStorage::printSDInfo() {
     Serial.printf("SD Card Size: %lluMB\n", cardSize);
 }
 
-boolean SDCardStorage::getConnected() const {
+boolean SDCardStorage::isConnected() const {
     return connected;
+}
+
+void SDCardStorage::writeString(const char *path, String content) {
+    unsigned int maxBufferSize = 4096;
+    unsigned int length = content.length();
+    unsigned int writeCount = 0;
+    unsigned int leftData = length;
+
+    while (leftData > 0) {
+        Serial.printf("writing chunk %d of %d...", writeCount, (length / maxBufferSize + 1));
+
+        unsigned int bufferSize = leftData > maxBufferSize ? maxBufferSize : leftData;
+        char cbuff[bufferSize + 1];
+
+        content.toCharArray(cbuff, bufferSize + 1, length - leftData);
+
+        if (writeCount == 0)
+            writeFile(SD, path, cbuff);
+        else
+            appendFile(SD, path, cbuff);
+
+        leftData -= bufferSize;
+
+        writeCount++;
+        Serial.println("done!");
+    }
 }

@@ -35,6 +35,8 @@ private:
     int pointCounter = 0;
     bool waitForSync = false;
 
+    String data = "xa,xy,distance\n";
+
     void runScan();
 
 public:

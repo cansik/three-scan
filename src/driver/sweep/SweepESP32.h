@@ -13,12 +13,23 @@ private:
     uint8_t txPin;
     uint8_t rxPin;
 
+    uint8_t pwrPin1;
+    uint8_t pwrPin2;
+
+    void turnPowerOn();
+
+    void turnPowerOff();
+
 public:
-    explicit SweepESP32(uint8_t rxPin, uint8_t txPin);
+    explicit SweepESP32(uint8_t rxPin, uint8_t txPin, uint8_t pwrPin1, uint8_t pwrPin2);
+
+    void setup();
 
     void open();
 
     void close();
+
+    void hardReset();
 };
 
 

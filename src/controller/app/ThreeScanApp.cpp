@@ -2,6 +2,8 @@
 // Created by Florian on 30.11.17.
 //
 
+#include <SD.h>
+#include <util/StatusLed.h>
 #include "ThreeScanApp.h"
 #include "util/MathUtils.h"
 
@@ -27,12 +29,15 @@ void ThreeScanApp::setup() {
 
     // setup sweep
     Serial.println("setting up sweep...");
-    sweep->open();
-    //sweep->setMotorSpeed(MOTOR_SPEED_CODE_0_HZ);
+    sweep->setup();
 
     // setup sd card
     Serial.println("setting up sd card...");
     storage->setup();
+
+    if (storage->isConnected())
+        StatusLed::turnOn();
+
     storage->printSDInfo();
 }
 
@@ -48,16 +53,19 @@ void ThreeScanApp::startScan() {
     waitForSync = true;
     currentAngle = scanSettings.startAngle;
 
-    Serial.println("resetting sweep...");
-    sweep->reset();
+    Serial.println("starting sweep...");
+    sweep->open();
 
     Serial.println("setting sweep settings...");
-    Serial.printf("current motor speed: %d\n", sweep->getMotorSpeed());
-    sweep->setMotorSpeed(MOTOR_SPEED_CODE_1_HZ);
-    sweep->setSampleRate(SAMPLE_RATE_CODE_1000_HZ);
+    sweep->setMotorSpeed(MOTOR_SPEED_CODE_5_HZ);
+    sweep->setSampleRate(SAMPLE_RATE_CODE_500_HZ);
 
     Serial.println("waiting for sweep to be ready...");
     sweep->waitUntilMotorReady();
+
+    Serial.printf("current motor speed: %d\n", sweep->getMotorSpeed());
+    Serial.printf("current sample rate: %d\n", sweep->getSampleRate());
+
     sweep->startScanning();
 
     Serial.println("start scanning");
@@ -66,8 +74,15 @@ void ThreeScanApp::startScan() {
 void ThreeScanApp::endScan() {
     sweep->stopScanning();
     servo->reset();
-    sweep->setMotorSpeed(MOTOR_SPEED_CODE_0_HZ);
+    sweep->close();
     Serial.println("finished scanning!");
+
+    // store data
+    if (storage->isConnected()) {
+        Serial.println("preparing data...");
+        storage->writeString("/lsc.txt", data);
+        Serial.println("done!");
+    }
 
     scanning = false;
 }
@@ -102,6 +117,10 @@ void ThreeScanApp::runScan() {
 
         Serial.printf("%d. (%2f°):\t%2f°\t%d cm\n", pointCounter, currentAngle, reading.getAngleDegrees(),
                       reading.getDistanceCentimeters());
+
+        data += String(currentAngle) + ";" + String(reading.getAngleDegrees()) + ";" +
+                String(reading.getDistanceCentimeters()) + "\n";
+
         pointCounter++;
     }
 

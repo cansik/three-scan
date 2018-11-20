@@ -25,6 +25,8 @@ public:
 
     void printSDInfo();
 
+    void writeString(const char *path, String content);
+
     void listDir(fs::FS &fs, const char *dirname, uint8_t levels);
 
     void createDir(fs::FS &fs, const char *path);
@@ -43,7 +45,7 @@ public:
 
     void testFileIO(fs::FS &fs, const char *path);
 
-    boolean getConnected() const;
+    boolean isConnected() const;
 };
 
 
