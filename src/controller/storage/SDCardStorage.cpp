@@ -19,17 +19,6 @@ void SDCardStorage::setup() {
     pinMode(misoPin, INPUT_PULLUP);
     pinMode(mosiPin, INPUT_PULLUP);
     pinMode(csPin, INPUT_PULLUP);
-
-    delay(10);
-
-    SPI.begin(sckPin, misoPin, mosiPin, csPin);
-    if (!SD.begin(csPin)) {
-        Serial.println("Card Mount Failed");
-        connected = false;
-        return;
-    }
-
-    connected = true;
 }
 
 void SDCardStorage::printSDInfo() {
@@ -78,6 +67,19 @@ void SDCardStorage::writeString(const String &path, const String &content, bool 
     file.print(content);
     file.flush();
     file.close();
+}
 
+void SDCardStorage::mount() {
+    SPI.begin(sckPin, misoPin, mosiPin, csPin);
+    if (!SD.begin(csPin)) {
+        Serial.println("Card Mount Failed");
+        connected = false;
+        return;
+    }
+
+    connected = true;
+}
+
+void SDCardStorage::unmount() {
     SD.end();
 }

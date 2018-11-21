@@ -25,6 +25,10 @@ public:
 
     void setup();
 
+    void mount();
+
+    void unmount();
+
     void printSDInfo();
 
     void writeString(const String &path, const String &content, bool overwrite = false);

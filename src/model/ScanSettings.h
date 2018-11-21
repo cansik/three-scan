@@ -13,7 +13,7 @@ struct ScanSettings {
 
     float endAngle = 180.0f;
 
-    float angleStep = 10.0f;
+    float angleStep = 5.0f;
 };
 
 

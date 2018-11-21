@@ -34,11 +34,6 @@ void ThreeScanApp::setup() {
     // setup sd card
     Serial.println("setting up sd card...");
     storage->setup();
-
-    if (storage->isConnected())
-        StatusLed::turnOn();
-
-    storage->printSDInfo();
 }
 
 void ThreeScanApp::loop() {
@@ -52,6 +47,15 @@ void ThreeScanApp::startScan() {
     scanning = true;
     waitForSync = true;
     currentAngle = scanSettings.startAngle;
+
+    // setup sd card
+    Serial.println("mounting sd card...");
+    storage->mount();
+
+    if (storage->isConnected())
+        StatusLed::turnOn();
+
+    storage->printSDInfo();
 
     Serial.println("starting sweep...");
     sweep->open();
@@ -83,6 +87,7 @@ void ThreeScanApp::endScan() {
         storage->writeString("/juan2.txt", data, true);
         Serial.println("done!");
 
+        storage->unmount();
         StatusLed::turnOff();
     }
 
