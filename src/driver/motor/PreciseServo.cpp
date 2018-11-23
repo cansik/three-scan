@@ -37,7 +37,6 @@ void PreciseServo::movePrecise(float angle, bool delayForServo) {
         // calculate delta
         auto deltaPulse = abs(pulseBefore - pulse);
 
-        // MathUtils::map(deltaPulse, SERVO_MIN_PULSE, SERVO_MAX_PULSE, 0.0f, 180.0f)
         auto deltaDegree = MathUtils::limit(
                 static_cast<float>(deltaPulse) / (SERVO_MAX_PULSE - SERVO_MIN_PULSE) * 180.0f,
                 0.0f, 180.0f);
