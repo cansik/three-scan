@@ -17,6 +17,10 @@ private:
     uint8_t devicePin;
     Servo servo;
 
+    uint16_t currentPulse = 0;
+
+    const double servoSpeedPerDegree = (0.18f * 3) / 180;
+
 public:
     explicit PreciseServo(uint8_t devicePin);
 
@@ -24,9 +28,9 @@ public:
 
     void reset();
 
-    void move(uint8_t angle);
+    void directMove(uint8_t angle);
 
-    void movePrecise(float angle);
+    void movePrecise(float angle, bool delayForServo = false);
 
     void movePulse(uint16_t pulseWidth);
 };

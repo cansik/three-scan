@@ -1,3 +1,5 @@
+#include <cmath>
+
 //
 // Created by Florian Bruggisser on 19.11.18.
 //
@@ -11,24 +13,34 @@ PreciseServo::PreciseServo(uint8_t devicePin) {
 
 void PreciseServo::setup() {
     servo.attach(devicePin, -1, 0, 180, SERVO_MIN_PULSE, SERVO_MAX_PULSE); // 180° for PDI-6221MG with power
-    //servo.attach(devicePin, -1, 0, 180, 500, 2500); // 180° for PDI-6221MG // 1380 => center
-    //servo.attach(devicePin, -1, 0, 180, 650, 2150); // 180° for MG995R
-    //servo.attach(devicePin, -1, 0, 180, 1000, 2000); // 180° correct format
 }
 
-void PreciseServo::move(uint8_t angle) {
+void PreciseServo::directMove(uint8_t angle) {
     servo.write(angle);
 }
 
 void PreciseServo::movePulse(uint16_t pulseWidth) {
     servo.writeMicroseconds(pulseWidth);
+    currentPulse = pulseWidth;
 }
 
 void PreciseServo::reset() {
-    servo.write(90);
+    movePrecise(90.0f);
 }
 
-void PreciseServo::movePrecise(float angle) {
+void PreciseServo::movePrecise(float angle, bool delayForServo) {
+    auto pulseBefore = currentPulse;
     auto pulse = static_cast<uint16_t>(MathUtils::map(angle, 0.0f, 180.0f, SERVO_MIN_PULSE, SERVO_MAX_PULSE));
-    servo.writeMicroseconds(pulse);
+    movePulse(pulse);
+
+    if (delayForServo) {
+        // calculate delta
+        auto deltaPulse = abs(pulseBefore - pulse);
+        auto deltaDegree = MathUtils::limit(MathUtils::map(deltaPulse, SERVO_MIN_PULSE, SERVO_MAX_PULSE, 0.0f, 180.0f), 0.0f, 180.0f);
+        auto millisToWait = std::lround(servoSpeedPerDegree * deltaDegree * 1000);
+
+        Serial.printf("Angle: %f Delta Pulse: %i, Delta Degree: %f, Millis: %lu\n", angle, deltaPulse,
+                      deltaDegree, millisToWait);
+        delay(static_cast<uint32_t>(millisToWait));
+    }
 }

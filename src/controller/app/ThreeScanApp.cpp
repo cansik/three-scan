@@ -47,6 +47,7 @@ void ThreeScanApp::startScan() {
     scanning = true;
     waitForSync = true;
     currentAngle = scanSettings.startAngle;
+    currentAngleChanged = true;
 
     // setup sd card
     Serial.println("mounting sd card...");
@@ -96,7 +97,10 @@ void ThreeScanApp::endScan() {
 
 void ThreeScanApp::runScan() {
     // move
-    servo->movePrecise(currentAngle);
+    if (currentAngleChanged) {
+        servo->movePrecise(currentAngle, true);
+        currentAngleChanged = false;
+    }
 
     // check if scan is ready
     auto success = false;
@@ -112,6 +116,7 @@ void ThreeScanApp::runScan() {
 
                 // update x angle
                 currentAngle += scanSettings.angleStep;
+                currentAngleChanged = true;
             } else {
                 waitForSync = true;
                 sweep->stopScanning();
@@ -132,7 +137,7 @@ void ThreeScanApp::runScan() {
     }
 
     // check end condition
-    if (currentAngle >= scanSettings.endAngle) {
+    if (currentAngle > scanSettings.endAngle) {
         endScan();
     }
 

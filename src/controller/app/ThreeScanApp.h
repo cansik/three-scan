@@ -32,6 +32,7 @@ private:
 
     bool scanning = false;
     float currentAngle = 0.0f;
+    bool currentAngleChanged = false;
     int pointCounter = 0;
     bool waitForSync = false;
 
