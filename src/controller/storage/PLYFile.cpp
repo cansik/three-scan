@@ -23,7 +23,7 @@ void PLYFile::append(Vertex *vertex) {
                + " " + String(color) + " " + String(color) + " " + String(color) + "\n";
 
     Serial.print("Line: ");
-    Serial.println(m.c_str());
+    Serial.print(m.c_str());
 
     buffer += m;
     vertexCount++;

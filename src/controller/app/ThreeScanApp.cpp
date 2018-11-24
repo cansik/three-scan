@@ -62,7 +62,7 @@ void ThreeScanApp::startScan() {
     currentAngleChanged = true;
 
     // creating data file
-    plyFile->create(storage->getFreeFilePath("/scan", ".ply"));
+    plyFile->create(storage->getFreeFilePath("/s", ".txt"));
 
     Serial.println("starting sweep...");
     sweep->open();
@@ -94,6 +94,7 @@ void ThreeScanApp::endScan() {
     if (storage->isConnected()) {
         Serial.println("writing data...");
         saveData();
+        storage->unmount();
         Serial.println("done!");
     }
 

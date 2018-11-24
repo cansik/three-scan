@@ -53,7 +53,6 @@ boolean SDCardStorage::isConnected() const {
 void SDCardStorage::writeString(const String &path, const String &content, bool overwrite) {
     // delete file if necessary
     if (SD.exists(path)) {
-
         if (overwrite) {
             Serial.println("file deleted!");
             SD.remove(path);
