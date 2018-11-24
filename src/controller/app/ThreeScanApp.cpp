@@ -43,6 +43,9 @@ void ThreeScanApp::setup() {
         StatusLed::turnOn();
 
     storage->printSDInfo();
+
+    // setting up data file
+    plyFile = new PLYFile(storage);
 }
 
 void ThreeScanApp::loop() {
@@ -57,6 +60,9 @@ void ThreeScanApp::startScan() {
     waitForSync = true;
     currentAngle = scanSettings.startAngle;
     currentAngleChanged = true;
+
+    // creating data file
+    plyFile->create(storage->getFreeFilePath("/scan", ".ply"));
 
     Serial.println("starting sweep...");
     sweep->open();
@@ -86,8 +92,8 @@ void ThreeScanApp::endScan() {
 
     // store data
     if (storage->isConnected()) {
-        Serial.print("writing data...");
-        storage->writeString("/data.txt", data, true);
+        Serial.println("writing data...");
+        saveData();
         Serial.println("done!");
     }
 
@@ -184,4 +190,14 @@ AppSettings &ThreeScanApp::getSettings() {
 
 void ThreeScanApp::loadDefaultSettings() {
     settings = AppSettings();
+}
+
+void ThreeScanApp::saveData() {
+    Serial.println("appending buffer...");
+    for (unsigned int i = 0; i < buffer.length(); i++) {
+        plyFile->append(buffer.get(i));
+    }
+
+    Serial.println("closing file...");
+    plyFile->close();
 }

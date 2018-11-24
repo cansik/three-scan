@@ -35,6 +35,10 @@ public:
         return maxSize;
     }
 
+    const TPtr get(unsigned int i) {
+        return data[i];
+    }
+
     TPtr operator[](int i) const { return data[i]; }
 
     TPtr &operator[](int i) { return data[i]; }
@@ -55,7 +59,7 @@ MutableBuffer<T>::~MutableBuffer() {
 
 template<class T>
 void MutableBuffer<T>::add(TPtr value) {
-    data[++index] = value;
+    data[index++] = value;
 }
 
 template<class T>

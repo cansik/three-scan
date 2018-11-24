@@ -6,20 +6,26 @@
 
 #include "PLYFile.h"
 
-PLYFile::PLYFile(String path, PLYFile::SDCardStoragePtr storage) {
-    this->path = path;
+PLYFile::PLYFile(PLYFile::SDCardStoragePtr storage) {
     this->sd = storage;
 }
 
-void PLYFile::create() {
+void PLYFile::create(String path) {
+    this->path = path;
     vertexCount = 0;
 }
 
 void PLYFile::append(Vertex *vertex) {
     auto position = vertex->getSphericalPosition();
     auto color = vertex->getSignalStrength();
-    buffer += String(position.x) + " " + String(position.y) + " " + String(position.z)
-              + String(color) + " " + String(color) + " " + String(color) + "\n";
+
+    String m = String(position.x, 4) + " " + String(position.y, 4) + " " + String(position.z, 4)
+               + " " + String(color) + " " + String(color) + " " + String(color) + "\n";
+
+    Serial.print("Line: ");
+    Serial.println(m.c_str());
+
+    buffer += m;
     vertexCount++;
 }
 

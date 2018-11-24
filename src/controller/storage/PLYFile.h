@@ -36,9 +36,9 @@ private:
     int vertexCount = 0;
 
 public:
-    explicit PLYFile(String path, SDCardStoragePtr storage);
+    explicit PLYFile(SDCardStoragePtr storage);
 
-    void create();
+    void create(String path);
 
     void append(Vertex *vertex);
 

@@ -34,3 +34,7 @@ unsigned long MathUtils::millisToSeconds(unsigned long millis) {
 unsigned long MathUtils::secondsToMillis(unsigned long seconds) {
     return seconds * 1000;
 }
+
+float MathUtils::degToRadf(float degree) {
+    return (degree * 71) / 4068.0f;
+}

@@ -10,10 +10,10 @@
 #include "Vector3.h"
 
 class Vertex {
-    float azimuthalAngle; // degrees by lidar θ
-    float polarAngle; // degrees by servo φ
-    uint16_t radius; // cm (rho)
-    uint8_t signalStrength;
+    float azimuthalAngle = 0.0f; // degrees by lidar θ
+    float polarAngle = 0.0f; // degrees by servo φ
+    uint16_t radius = 0; // cm (rho)
+    uint8_t signalStrength = 0;
 
 public:
     Vertex(float azimuthalAngle, float polarAngle, uint16_t radius, uint8_t signalStrength);

@@ -22,6 +22,8 @@ public:
     static unsigned long secondsToMillis(unsigned long seconds);
 
     static unsigned long millisToSeconds(unsigned long millis);
+
+    static float degToRadf(float degree);
 };
 
 

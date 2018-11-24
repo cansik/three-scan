@@ -3,13 +3,17 @@
 //
 
 #include <Arduino.h>
+#include <util/MathUtils.h>
 #include "Vertex.h"
 
 
 Vertex::Vertex(float azimuthalAngle, float polarAngle, uint16_t radius,
-               uint8_t signalStrength) : azimuthalAngle(azimuthalAngle),
-                                         polarAngle(polarAngle), radius(radius),
-                                         signalStrength(signalStrength) {}
+               uint8_t signalStrength) {
+    this->azimuthalAngle = azimuthalAngle;
+    this->polarAngle = polarAngle;
+    this->radius = radius;
+    this->signalStrength = signalStrength;
+}
 
 float Vertex::getAzimuthalAngle() const {
     return azimuthalAngle;
@@ -28,8 +32,8 @@ uint8_t Vertex::getSignalStrength() const {
 }
 
 Vector3f Vertex::getSphericalPosition() const {
-    auto theta = radians(azimuthalAngle);
-    auto phi = radians(polarAngle);
+    auto theta = MathUtils::degToRadf(azimuthalAngle);
+    auto phi = MathUtils::degToRadf(polarAngle);
 
     auto x = static_cast<float>(radius * sin(theta) * cos(phi));
     auto y = static_cast<float>(radius * sin(theta) * sin(phi));
