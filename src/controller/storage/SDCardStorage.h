@@ -29,6 +29,8 @@ public:
 
     void unmount();
 
+    String getFreeFilePath(String prefix, String extension);
+
     void printSDInfo();
 
     void writeString(const String &path, const String &content, bool overwrite = false);

@@ -83,3 +83,19 @@ void SDCardStorage::mount() {
 void SDCardStorage::unmount() {
     SD.end();
 }
+
+String SDCardStorage::getFreeFilePath(String prefix, String extension) {
+    String fileName = prefix + extension;
+
+    if (!SD.exists(fileName)) {
+        return fileName;
+    }
+
+    // find new filename
+    int i = 1;
+    do {
+        fileName = prefix + String(i) + extension;
+        i++;
+    } while (SD.exists(fileName));
+    return fileName;
+}

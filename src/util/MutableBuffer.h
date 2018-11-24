@@ -12,16 +12,16 @@ private:
 
     TPtr *data;
 
-    const unsigned int maxSize;
+    unsigned int maxSize{};
 
-    unsigned int index;
+    unsigned int index{};
 
 public:
     explicit MutableBuffer(unsigned int maxSize);
 
     ~MutableBuffer();
 
-    void add(T value);
+    void add(TPtr value);
 
     void reset();
 
@@ -54,7 +54,7 @@ MutableBuffer<T>::~MutableBuffer() {
 }
 
 template<class T>
-void MutableBuffer<T>::add(T value) {
+void MutableBuffer<T>::add(TPtr value) {
     data[++index] = value;
 }
 

@@ -34,6 +34,15 @@ void ThreeScanApp::setup() {
     // setup sd card
     Serial.println("setting up sd card...");
     storage->setup();
+
+    // mount sd card
+    Serial.println("mounting sd card...");
+    storage->mount();
+
+    if (storage->isConnected())
+        StatusLed::turnOn();
+
+    storage->printSDInfo();
 }
 
 void ThreeScanApp::loop() {
@@ -49,15 +58,6 @@ void ThreeScanApp::startScan() {
     currentAngle = scanSettings.startAngle;
     currentAngleChanged = true;
 
-    // setup sd card
-    Serial.println("mounting sd card...");
-    storage->mount();
-
-    if (storage->isConnected())
-        StatusLed::turnOn();
-
-    storage->printSDInfo();
-
     Serial.println("starting sweep...");
     sweep->open();
 
@@ -65,15 +65,17 @@ void ThreeScanApp::startScan() {
     sweep->setMotorSpeed(MOTOR_SPEED_CODE_5_HZ);
     sweep->setSampleRate(SAMPLE_RATE_CODE_500_HZ);
 
+    // clear buffer
+    buffer.clear();
+
     Serial.println("waiting for sweep to be ready...");
     sweep->waitUntilMotorReady();
 
     Serial.printf("current motor speed: %d\n", sweep->getMotorSpeed());
     Serial.printf("current sample rate: %d\n", sweep->getSampleRate());
 
-    sweep->startScanning();
-
     Serial.println("start scanning");
+    sweep->startScanning();
 }
 
 void ThreeScanApp::endScan() {
@@ -85,11 +87,8 @@ void ThreeScanApp::endScan() {
     // store data
     if (storage->isConnected()) {
         Serial.print("writing data...");
-        storage->writeString("/juan2.txt", data, true);
+        storage->writeString("/data.txt", data, true);
         Serial.println("done!");
-
-        storage->unmount();
-        StatusLed::turnOff();
     }
 
     scanning = false;
@@ -127,12 +126,13 @@ void ThreeScanApp::runScan() {
         if (waitForSync)
             return;
 
+        // new package received
         Serial.printf("%d. (%2f°):\t%2f°\t%d cm\n", pointCounter, currentAngle, reading.getAngleDegrees(),
                       reading.getDistanceCentimeters());
 
-        data += String(currentAngle) + ";" + String(reading.getAngleDegrees()) + ";" +
-                String(reading.getDistanceCentimeters()) + "\n";
-
+        // add data to buffer
+        buffer.add(new Vertex(currentAngle, reading.getAngleDegrees(), reading.getDistanceCentimeters(),
+                              reading.getSignalStrength()));
         pointCounter++;
     }
 

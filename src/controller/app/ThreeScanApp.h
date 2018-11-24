@@ -9,12 +9,15 @@
 #include <util/Timer.h>
 #include <model/ScanSettings.h>
 #include <model/Vertex.h>
+#include <util/MutableBuffer.h>
 #include "EEPROM.h"
 #include "model/AppSettings.h"
 #include "controller/BaseController.h"
 
 #define EEPROM_SIZE 0xFF
 #define EEPROM_START_ADDRESS 0x00
+
+#define MAX_BUFFER_SIZE 32768 // 2^15
 
 class ThreeScanApp : public BaseController {
 private:
@@ -39,6 +42,8 @@ private:
 
     String data = "xa,xy,distance\n";
 
+    MutableBuffer<Vertex> buffer = MutableBuffer<Vertex>(MAX_BUFFER_SIZE);
+
     void runScan();
 
 public:
@@ -59,6 +64,8 @@ public:
     void startScan();
 
     void endScan();
+
+
 };
 
 
