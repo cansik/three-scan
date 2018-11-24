@@ -8,6 +8,7 @@
 #include <driver/motor/PreciseServo.h>
 #include <util/Timer.h>
 #include <model/ScanSettings.h>
+#include <model/Vertex.h>
 #include "EEPROM.h"
 #include "model/AppSettings.h"
 #include "controller/BaseController.h"
