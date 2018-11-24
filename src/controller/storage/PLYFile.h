@@ -27,7 +27,7 @@ private:
                                   "property uchar red\n"
                                   "property uchar green\n"
                                   "property uchar blue\n"
-                                  "end_header";
+                                  "end_header\n";
 
     SDCardStoragePtr sd;
 
@@ -43,6 +43,8 @@ public:
     void append(Vertex *vertex);
 
     void close();
+
+    String getData();
 };
 
 

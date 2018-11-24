@@ -44,6 +44,8 @@ void ThreeScanApp::setup() {
 
     storage->printSDInfo();
 
+    //storage->writeString("/juan", "hello world", true);
+
     // setting up data file
     plyFile = new PLYFile(storage);
 }
@@ -61,8 +63,18 @@ void ThreeScanApp::startScan() {
     currentAngle = scanSettings.startAngle;
     currentAngleChanged = true;
 
+    // add sd if not yet
+    if (!storage->isConnected()) {
+        storage->setup();
+        storage->mount();
+
+        if (storage->isConnected()) {
+            StatusLed::turnOn();
+        }
+    }
+
     // creating data file
-    plyFile->create(storage->getFreeFilePath("/s", ".txt"));
+    plyFile->create(storage->getFreeFilePath("/scan", ""));
 
     Serial.println("starting sweep...");
     sweep->open();
@@ -94,10 +106,12 @@ void ThreeScanApp::endScan() {
     if (storage->isConnected()) {
         Serial.println("writing data...");
         saveData();
-        storage->unmount();
         Serial.println("done!");
+
+        storage->unmount();
     }
 
+    StatusLed::turnOff();
     scanning = false;
 }
 
@@ -114,7 +128,7 @@ void ThreeScanApp::runScan() {
 
     if (success) {
         if (reading.isSync()) {
-            Serial.println("sync");
+            Serial.printf("sync %2f", currentAngle);
             pointCounter = 0;
 
             if (waitForSync) {
@@ -195,10 +209,10 @@ void ThreeScanApp::loadDefaultSettings() {
 
 void ThreeScanApp::saveData() {
     Serial.println("appending buffer...");
-    for (unsigned int i = 0; i < buffer.length(); i++) {
+    for (unsigned int i = 0; i < 10; i++) {
         plyFile->append(buffer.get(i));
     }
 
-    Serial.println("closing file...");
+    Serial.println("writing file...");
     plyFile->close();
 }

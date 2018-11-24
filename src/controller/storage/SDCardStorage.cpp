@@ -54,10 +54,10 @@ void SDCardStorage::writeString(const String &path, const String &content, bool 
     // delete file if necessary
     if (SD.exists(path)) {
         if (overwrite) {
-            Serial.println("file deleted!");
+            Serial.println("file " + path + " deleted");
             SD.remove(path);
         } else {
-            Serial.printf("file already exists!");
+            Serial.printf("file %s already exists!", path.c_str());
             return;
         }
     }
@@ -66,6 +66,8 @@ void SDCardStorage::writeString(const String &path, const String &content, bool 
     file.print(content);
     file.flush();
     file.close();
+
+    Serial.printf("Write Error: %d\n", file.getWriteError());
 }
 
 void SDCardStorage::mount() {
@@ -87,14 +89,18 @@ String SDCardStorage::getFreeFilePath(String prefix, String extension) {
     String fileName = prefix + extension;
 
     if (!SD.exists(fileName)) {
+        Serial.println("file does not exist: " + fileName + "\n");
         return fileName;
     }
 
     // find new filename
     int i = 1;
     do {
+        Serial.println("file already exists: " + fileName + "\n");
         fileName = prefix + String(i) + extension;
         i++;
     } while (SD.exists(fileName));
+
+    Serial.println("final file name: " + fileName + "\n");
     return fileName;
 }

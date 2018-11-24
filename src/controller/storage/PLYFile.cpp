@@ -1,5 +1,7 @@
 #include <utility>
 
+#include <utility>
+
 //
 // Created by Florian Bruggisser on 24.11.18.
 //
@@ -11,7 +13,7 @@ PLYFile::PLYFile(PLYFile::SDCardStoragePtr storage) {
 }
 
 void PLYFile::create(String path) {
-    this->path = path;
+    this->path = std::move(path);
     vertexCount = 0;
 }
 
@@ -22,17 +24,31 @@ void PLYFile::append(Vertex *vertex) {
     String m = String(position.x, 4) + " " + String(position.y, 4) + " " + String(position.z, 4)
                + " " + String(color) + " " + String(color) + " " + String(color) + "\n";
 
-    Serial.print("Line: ");
-    Serial.print(m.c_str());
-
     buffer += m;
     vertexCount++;
 }
 
 void PLYFile::close() {
+    //sd->writeString("/juan", "test string", true);
+
+    File fj = SD.open("/hell", FILE_APPEND);
+    fj.print("jeljadskf\n");
+    fj.close();
+
+    //sd->writeString(path.c_str(), getData().c_str(), true);
+
+    String data = getData();
+
+    File file = SD.open(path.c_str(), FILE_WRITE);
+    file.print(data.c_str());
+    file.flush();
+    file.close();
+}
+
+String PLYFile::getData() {
     // write header then vertices
     String header = headerTemplate;
     header.replace("%vertexCount", String(vertexCount));
 
-    sd->writeString(path, header + buffer, true);
+    return String(header + buffer);
 }
