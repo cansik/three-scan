@@ -27,28 +27,12 @@ void PLYFile::append(Vertex *vertex) {
     auto position = vertex->getSphericalPosition();
     auto color = vertex->getSignalStrength();
 
-    file.print(position.x);
-    file.print(" ");
-    file.print(position.y);
-    file.print(" ");
-    file.print(position.z);
-    file.print(" ");
-    file.print(color);
-    file.print(" ");
-    file.print(color);
-    file.print(" ");
-    file.print(color);
-    file.print("\n");
+    String m = String(position.x, 4) + " " + String(position.y, 4) + " " + String(position.z, 4)
+               + " " + String(color) + " " + String(color) + " " + String(color) + "\n";
+    file.print(m);
 }
 
 void PLYFile::close() {
-    // wait for print
-    for (int i = 0; i < 500; i++) {
-        delay(2);
-    }
-
-    //file.println("the end");
-
     file.flush();
     file.close();
 }

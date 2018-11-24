@@ -21,7 +21,6 @@ private:
 
     File file;
 
-public:
     const String headerTemplate = "ply\n"
                                   "format ascii 1.0\n"
                                   "comment Created by Three Scan (Florian Bruggisser)\n"
@@ -35,6 +34,7 @@ public:
                                   "property uchar blue\n"
                                   "end_header\n";
 
+public:
     explicit PLYFile(SDCardStoragePtr storage);
 
     void create(String path, int vertexCount);

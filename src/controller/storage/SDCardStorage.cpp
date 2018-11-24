@@ -89,18 +89,18 @@ String SDCardStorage::getFreeFilePath(String prefix, String extension) {
     String fileName = prefix + extension;
 
     if (!SD.exists(fileName)) {
-        Serial.println("file does not exist: " + fileName + "\n");
+        Serial.println("file does not exist: " + fileName);
         return fileName;
     }
 
     // find new filename
     int i = 1;
     do {
-        Serial.println("file already exists: " + fileName + "\n");
+        Serial.println("file already exists: " + fileName);
         fileName = prefix + String(i) + extension;
         i++;
     } while (SD.exists(fileName));
 
-    Serial.println("final file name: " + fileName + "\n");
+    Serial.println("final file name: " + fileName);
     return fileName;
 }
