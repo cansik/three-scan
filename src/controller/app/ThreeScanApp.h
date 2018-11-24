@@ -40,10 +40,12 @@ private:
     bool scanning = false;
     float currentAngle = 0.0f;
     bool currentAngleChanged = false;
-    int pointCounter = 0;
     bool waitForSync = false;
     bool isFirstAngle = true;
-    
+
+    int pointCounter = 0;
+    int fullPointCounter = 0;
+
     MutableBuffer<Vertex> buffer = MutableBuffer<Vertex>(MAX_BUFFER_SIZE);
 
     void runScan();

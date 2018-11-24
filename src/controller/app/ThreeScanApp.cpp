@@ -63,6 +63,7 @@ void ThreeScanApp::startScan() {
     currentAngle = scanSettings.startAngle;
     currentAngleChanged = true;
     isFirstAngle = true;
+    fullPointCounter = 0;
 
     Serial.println("starting sweep...");
     sweep->open();
@@ -116,7 +117,7 @@ void ThreeScanApp::runScan() {
 
     if (success) {
         if (reading.isSync()) {
-            Serial.printf("sync %2f", currentAngle);
+            Serial.printf("sync %2f - points: %d\n", currentAngle, fullPointCounter);
             pointCounter = 0;
 
             if (waitForSync) {
@@ -148,6 +149,7 @@ void ThreeScanApp::runScan() {
         buffer.add(new Vertex(currentAngle, reading.getAngleDegrees(), reading.getDistanceCentimeters(),
                               reading.getSignalStrength()));
         pointCounter++;
+        fullPointCounter++;
     }
 
     // check end condition
