@@ -41,9 +41,7 @@ void PreciseServo::movePrecise(float angle, bool delayForServo) {
                 static_cast<float>(deltaPulse) / (SERVO_MAX_PULSE - SERVO_MIN_PULSE) * 180.0f,
                 0.0f, 180.0f);
         auto millisToWait = std::lround(servoSpeedPerDegree * deltaDegree * 1000);
-
-        Serial.printf("Angle: %f Delta Pulse: %i, Delta Degree: %f, Millis: %lu\n", angle, deltaPulse,
-                      deltaDegree, millisToWait);
+        
         delay(static_cast<uint32_t>(millisToWait));
     }
 }

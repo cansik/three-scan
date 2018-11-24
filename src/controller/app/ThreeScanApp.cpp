@@ -74,7 +74,7 @@ void ThreeScanApp::startScan() {
     }
 
     // creating data file
-    plyFile->create(storage->getFreeFilePath("/scan", ""));
+    //plyFile->create(storage->getFreeFilePath("/scan", ""), 0);
 
     Serial.println("starting sweep...");
     sweep->open();
@@ -208,11 +208,30 @@ void ThreeScanApp::loadDefaultSettings() {
 }
 
 void ThreeScanApp::saveData() {
+    if (storage->isConnected())
+        storage->unmount();
+    StatusLed::turnOff();
+    delay(2000);
+
+    storage->setup();
+    storage->mount();
+
+    if (storage->isConnected()) {
+        StatusLed::turnOn();
+    }
+
+    auto path = storage->getFreeFilePath("/scan", "");
+    auto file = SD.open(path.c_str(), FILE_WRITE);
+    file.print(plyFile->headerTemplate.c_str());
+
     Serial.println("appending buffer...");
-    for (unsigned int i = 0; i < 10; i++) {
-        plyFile->append(buffer.get(i));
+    for (unsigned int i = 0; i < buffer.length(); i++) {
+        //plyFile->append(buffer.get(i));
+        file.print("vertex");
+        file.print(i);
     }
 
     Serial.println("writing file...");
-    plyFile->close();
+    file.close();
+    //plyFile->close();
 }

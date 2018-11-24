@@ -16,6 +16,12 @@ private:
 
     String path;
 
+    SDCardStoragePtr sd;
+    int vertexCount = 0;
+
+    File file;
+
+public:
     const String headerTemplate = "ply\n"
                                   "format ascii 1.0\n"
                                   "comment Created by Three Scan (Florian Bruggisser)\n"
@@ -29,22 +35,13 @@ private:
                                   "property uchar blue\n"
                                   "end_header\n";
 
-    SDCardStoragePtr sd;
-
-    String buffer = "";
-
-    int vertexCount = 0;
-
-public:
     explicit PLYFile(SDCardStoragePtr storage);
 
-    void create(String path);
+    void create(String path, int vertexCount);
 
     void append(Vertex *vertex);
 
     void close();
-
-    String getData();
 };
 
 
