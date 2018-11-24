@@ -42,8 +42,8 @@ private:
     bool currentAngleChanged = false;
     int pointCounter = 0;
     bool waitForSync = false;
-
-    String data = "xa,xy,distance\n";
+    bool isFirstAngle = true;
+    
     MutableBuffer<Vertex> buffer = MutableBuffer<Vertex>(MAX_BUFFER_SIZE);
 
     void runScan();

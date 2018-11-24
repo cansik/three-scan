@@ -62,6 +62,7 @@ void ThreeScanApp::startScan() {
     waitForSync = true;
     currentAngle = scanSettings.startAngle;
     currentAngleChanged = true;
+    isFirstAngle = true;
 
     Serial.println("starting sweep...");
     sweep->open();
@@ -122,8 +123,13 @@ void ThreeScanApp::runScan() {
                 waitForSync = false;
 
                 // update x angle
-                currentAngle += scanSettings.angleStep;
-                currentAngleChanged = true;
+                if (isFirstAngle) {
+                    isFirstAngle = false;
+                } else {
+                    currentAngle += scanSettings.angleStep;
+                    currentAngleChanged = true;
+                }
+
             } else {
                 waitForSync = true;
                 sweep->stopScanning();
