@@ -203,11 +203,14 @@ void ThreeScanApp::loadDefaultSettings() {
 }
 
 void ThreeScanApp::saveData() {
+    delay(1000);
 
     Serial.println("appending buffer...");
     cloudFile->appendBuffer(buffer);
-    //buffer.clear();
 
-    Serial.println("writing file...");
+    Serial.println("clearing buffer...");
+    buffer.clear();
+
+    Serial.println("closing file...");
     cloudFile->close();
 }
