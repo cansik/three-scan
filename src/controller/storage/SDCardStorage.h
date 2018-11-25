@@ -25,7 +25,7 @@ public:
 
     void setup();
 
-    void secureMount(unsigned int delayTime = 100);
+    void secureMount(unsigned int delayTime = 250);
 
     void mount();
 
