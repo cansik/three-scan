@@ -16,7 +16,8 @@ class Vertex {
     uint8_t signalStrength = 0;
 
 public:
-    Vertex(float azimuthalAngle, float polarAngle, uint16_t radius, uint8_t signalStrength);
+    Vertex(float azimuthalAngle, float polarAngle, uint16_t radius,
+           uint8_t signalStrength);
 
     float getAzimuthalAngle() const;
 

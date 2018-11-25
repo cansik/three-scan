@@ -1,3 +1,5 @@
+#include <cmath>
+
 //
 // Created by Florian on 30.11.17.
 //
@@ -65,6 +67,14 @@ void ThreeScanApp::startScan() {
     storage->unmount();
     cloudFile->create(fileName);
 
+    // clear buffer
+    for (int i = 0; i < 500; i++) {
+        buffer.add(new Vertex(1.0, 10, 200, 200));
+    }
+
+    Serial.println("clearing buffer...");
+    buffer.clear();
+
     Serial.println("starting sweep...");
     sweep->open();
 
@@ -72,14 +82,15 @@ void ThreeScanApp::startScan() {
     sweep->setMotorSpeed(MOTOR_SPEED_CODE_5_HZ);
     sweep->setSampleRate(SAMPLE_RATE_CODE_500_HZ);
 
-    // clear buffer
-    buffer.clear();
-
     Serial.println("waiting for sweep to be ready...");
     sweep->waitUntilMotorReady();
 
     Serial.printf("current motor speed: %d\n", sweep->getMotorSpeed());
     Serial.printf("current sample rate: %d\n", sweep->getSampleRate());
+
+    // move servo to start position
+    servo->movePrecise(currentAngle, true);
+    delay(500);
 
     Serial.println("start scanning");
     sweep->startScanning();
@@ -117,8 +128,6 @@ void ThreeScanApp::runScan() {
 
     if (success) {
         if (reading.isSync()) {
-            Serial.printf("sync %2f - points: %d\n", currentAngle, fullPointCounter);
-            pointCounter = 0;
 
             if (waitForSync) {
                 waitForSync = false;
@@ -127,10 +136,15 @@ void ThreeScanApp::runScan() {
                 if (isFirstAngle) {
                     isFirstAngle = false;
                 } else {
+                    Serial.printf("sync %2f - points: %d average: %lu\n", currentAngle, fullPointCounter,
+                                  std::lround(averagePointCount->getValue()));
+                    averagePointCount->add(pointCounter);
+
                     currentAngle += scanSettings.angleStep;
                     currentAngleChanged = true;
                 }
 
+                pointCounter = 0;
             } else {
                 waitForSync = true;
                 sweep->stopScanning();
@@ -208,8 +222,8 @@ void ThreeScanApp::saveData() {
     Serial.println("appending buffer...");
     cloudFile->appendBuffer(buffer);
 
-    Serial.println("clearing buffer...");
-    buffer.clear();
+    Serial.printf("clearing buffer (%d)\n", buffer.length());
+    //buffer.clear();
 
     Serial.println("closing file...");
     cloudFile->close();

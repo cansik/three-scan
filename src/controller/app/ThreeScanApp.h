@@ -12,6 +12,7 @@
 #include <util/MutableBuffer.h>
 #include <controller/storage/PLYFile.h>
 #include <controller/storage/CloudFile.h>
+#include <util/ExponentialMovingAverage.h>
 #include "EEPROM.h"
 #include "model/AppSettings.h"
 #include "controller/BaseController.h"
@@ -19,7 +20,7 @@
 #define EEPROM_SIZE 0xFF
 #define EEPROM_START_ADDRESS 0x00
 
-#define MAX_BUFFER_SIZE 10000 // 2^15
+#define MAX_BUFFER_SIZE 1000 // 2^15
 
 class ThreeScanApp : public BaseController {
 private:
@@ -27,6 +28,7 @@ private:
     typedef SweepESP32 *SweepESP32Ptr;
     typedef PreciseServo *PreciseServoPtr;
     typedef CloudFile *CloudFilePtr;
+    typedef ExponentialMovingAverage *ExponentialMovingAveragePtr;
 
     AppSettings settings;
     ScanSettings scanSettings;
@@ -46,6 +48,8 @@ private:
 
     int pointCounter = 0;
     int fullPointCounter = 0;
+
+    ExponentialMovingAveragePtr averagePointCount = new ExponentialMovingAverage(0.3);
 
     MutableBuffer<Vertex> buffer = MutableBuffer<Vertex>(MAX_BUFFER_SIZE);
 

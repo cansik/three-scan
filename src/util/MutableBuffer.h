@@ -5,6 +5,8 @@
 #ifndef THREE_SCAN_MUTABLEBUFFER_H
 #define THREE_SCAN_MUTABLEBUFFER_H
 
+#include <HardwareSerial.h>
+
 template<class T>
 class MutableBuffer {
 private:
@@ -12,9 +14,9 @@ private:
 
     TPtr *data;
 
-    unsigned int maxSize{};
+    unsigned int maxSize = 0;
 
-    unsigned int index{};
+    unsigned int index = 0;
 
 public:
     explicit MutableBuffer(unsigned int maxSize);
@@ -27,9 +29,7 @@ public:
 
     void clear();
 
-    const unsigned int length() const {
-        return index;
-    }
+    const unsigned int length();
 
     const unsigned int getMaxSize() const {
         return maxSize;
@@ -54,7 +54,7 @@ MutableBuffer<T>::MutableBuffer(unsigned int maxSize) {
 template<class T>
 MutableBuffer<T>::~MutableBuffer() {
     clear();
-    delete data;
+    delete[] data;
 }
 
 template<class T>
@@ -69,10 +69,21 @@ void MutableBuffer<T>::reset() {
 
 template<class T>
 void MutableBuffer<T>::clear() {
-    for (auto i = 0; i < length() - 1; i++) {
-        delete (data[i]);
+    for (auto i = 0; i < length(); i++) {
+        Serial.printf("trying to delete %d...\n", i);
+
+        if (!data[i]) {
+            Serial.println("not pointer initialised!");
+        }
+
+        delete data[i];
     }
     reset();
+}
+
+template<class T>
+const unsigned int MutableBuffer<T>::length() {
+    return index;
 }
 
 
