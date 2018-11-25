@@ -146,7 +146,7 @@ void ThreeScanApp::runScan() {
                       reading.getDistanceCentimeters());
 
         // add data to buffer
-        buffer.add(new Vertex(currentAngle, reading.getAngleDegrees(), reading.getDistanceCentimeters(),
+        buffer.add(new Vertex(reading.getAngleDegrees(), currentAngle, reading.getDistanceCentimeters(),
                               reading.getSignalStrength()));
         pointCounter++;
         fullPointCounter++;
@@ -207,7 +207,7 @@ void ThreeScanApp::saveData() {
     if (storage->isConnected())
         storage->unmount();
     StatusLed::turnOff();
-    delay(2000);
+    delay(100);
 
     storage->setup();
     storage->mount();
