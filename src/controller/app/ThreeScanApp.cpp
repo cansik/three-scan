@@ -100,6 +100,8 @@ void ThreeScanApp::endScan() {
     sweep->close();
     Serial.println("finished scanning!");
 
+    delay(1000);
+
     // store data
     Serial.println("writing data...");
     saveData();
@@ -149,6 +151,9 @@ void ThreeScanApp::runScan() {
                     // check if buffer is still enough
                     int mpc = static_cast<int>(std::llround(maxPointCount * 1.2));
                     if (buffer.getMaxSize() < buffer.length() + mpc) {
+                        sweep->stopScanning();
+                        delay(500);
+
                         Serial.println("buffer may exceeding...");
                         Serial.println("appending buffer...");
                         cloudFile->appendBuffer(buffer);
@@ -157,7 +162,6 @@ void ThreeScanApp::runScan() {
                         syncTimoutTimer.reset();
 
                         // reset scanning
-                        sweep->stopScanning();
                         sweep->startScanning();
                     }
 
@@ -177,8 +181,8 @@ void ThreeScanApp::runScan() {
             return;
 
         // new package received
-        Serial.printf("%d. (%2f°):\t%2f°\t%d cm\n", pointCounter, currentAngle, reading.getAngleDegrees(),
-                      reading.getDistanceCentimeters());
+        //Serial.printf("%d. (%2f°):\t%2f°\t%d cm\n", pointCounter, currentAngle, reading.getAngleDegrees(),
+        //reading.getDistanceCentimeters());
 
         // add data to buffer
         buffer.add(new Vertex(reading.getAngleDegrees(), currentAngle, reading.getDistanceCentimeters(),

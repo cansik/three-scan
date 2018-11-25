@@ -20,7 +20,7 @@
 #define EEPROM_SIZE 0xFF
 #define EEPROM_START_ADDRESS 0x00
 
-#define MAX_BUFFER_SIZE 10000
+#define MAX_BUFFER_SIZE 5000
 
 class ThreeScanApp : public BaseController {
 private:
