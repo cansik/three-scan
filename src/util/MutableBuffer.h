@@ -5,8 +5,6 @@
 #ifndef THREE_SCAN_MUTABLEBUFFER_H
 #define THREE_SCAN_MUTABLEBUFFER_H
 
-#include <HardwareSerial.h>
-
 template<class T>
 class MutableBuffer {
 private:
@@ -69,7 +67,6 @@ void MutableBuffer<T>::reset() {
 
 template<class T>
 void MutableBuffer<T>::clear() {
-    Serial.println("clear buffer called!");
     for (auto i = 0; i < length(); i++) {
         delete data[i];
     }
