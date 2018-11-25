@@ -11,6 +11,7 @@
 #include <model/Vertex.h>
 #include <util/MutableBuffer.h>
 #include <controller/storage/PLYFile.h>
+#include <controller/storage/CloudFile.h>
 #include "EEPROM.h"
 #include "model/AppSettings.h"
 #include "controller/BaseController.h"
@@ -25,7 +26,7 @@ private:
     typedef SDCardStorage *StoragePtr;
     typedef SweepESP32 *SweepESP32Ptr;
     typedef PreciseServo *PreciseServoPtr;
-    typedef PLYFile *PLYFilePtr;
+    typedef CloudFile *CloudFilePtr;
 
     AppSettings settings;
     ScanSettings scanSettings;
@@ -33,7 +34,7 @@ private:
     StoragePtr storage;
     SweepESP32Ptr sweep;
     PreciseServoPtr servo;
-    PLYFilePtr plyFile;
+    CloudFilePtr cloudFile;
 
     Timer scanTimer = Timer(33);
 

@@ -38,16 +38,10 @@ void ThreeScanApp::setup() {
     // mount sd card
     Serial.println("mounting sd card...");
     storage->mount();
-
-    if (storage->isConnected())
-        StatusLed::turnOn();
-
     storage->printSDInfo();
 
-    //storage->writeString("/juan", "hello world", true);
-
     // setting up data file
-    plyFile = new PLYFile(storage);
+    cloudFile = new CloudFile(storage);
 }
 
 void ThreeScanApp::loop() {
@@ -64,6 +58,12 @@ void ThreeScanApp::startScan() {
     currentAngleChanged = true;
     isFirstAngle = true;
     fullPointCounter = 0;
+
+    // create name and output file
+    storage->secureMount();
+    auto fileName = storage->getFreeFilePath("/scan", ".ply");
+    storage->unmount();
+    cloudFile->create(fileName);
 
     Serial.println("starting sweep...");
     sweep->open();
@@ -203,27 +203,10 @@ void ThreeScanApp::loadDefaultSettings() {
 }
 
 void ThreeScanApp::saveData() {
-    // reset card storage
-    if (storage->isConnected())
-        storage->unmount();
-    StatusLed::turnOff();
-    delay(100);
-
-    storage->setup();
-    storage->mount();
-
-    if (storage->isConnected()) {
-        StatusLed::turnOn();
-    }
-
-    // create file
-    plyFile->create(storage->getFreeFilePath("/scan", ".ply"), buffer.length());
-
     Serial.println("appending buffer...");
-    for (unsigned int i = 0; i < buffer.length(); i++) {
-        plyFile->append(buffer.get(i));
-    }
+    cloudFile->appendBuffer(buffer);
+    buffer.clear();
 
     Serial.println("writing file...");
-    plyFile->close();
+    cloudFile->close();
 }
