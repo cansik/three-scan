@@ -18,7 +18,7 @@ void CloudFile::create(const String &path) {
     closeFile();
 }
 
-void CloudFile::appendBuffer(MutableBuffer<Vertex> vertices) {
+void CloudFile::appendBuffer(MutableBuffer<Vertex> &vertices) {
     openFile(FILE_APPEND);
     for (unsigned int i = 0; i < vertices.length(); i++) {
         appendSingle(vertices.get(i));

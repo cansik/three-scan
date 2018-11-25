@@ -18,6 +18,7 @@ private:
     void closeFile();
 
 protected:
+    typedef MutableBuffer<Vertex> *VertexBuffer;
     typedef Vertex *VertexPtr;
     typedef SDCardStorage *SDCardStoragePtr;
 
@@ -52,7 +53,7 @@ public:
 
     void create(const String &path);
 
-    void appendBuffer(MutableBuffer<Vertex> vertices);
+    void appendBuffer(MutableBuffer<Vertex> &vertices);
 
     void close();
 };

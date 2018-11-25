@@ -144,7 +144,6 @@ void ThreeScanApp::runScan() {
                         Serial.println("appending buffer...");
                         cloudFile->appendBuffer(buffer);
                         buffer.clear();
-
                         Serial.println("done!");
                     }
 
@@ -231,6 +230,7 @@ void ThreeScanApp::saveData() {
     cloudFile->appendBuffer(buffer);
 
     Serial.printf("clearing buffer (%d)\n", buffer.length());
+    buffer.clear();
 
     Serial.println("closing file...");
     cloudFile->close();
