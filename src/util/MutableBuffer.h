@@ -69,13 +69,8 @@ void MutableBuffer<T>::reset() {
 
 template<class T>
 void MutableBuffer<T>::clear() {
+    Serial.println("clear buffer called!");
     for (auto i = 0; i < length(); i++) {
-        Serial.printf("trying to delete %d...\n", i);
-
-        if (!data[i]) {
-            Serial.println("not pointer initialised!");
-        }
-
         delete data[i];
     }
     reset();

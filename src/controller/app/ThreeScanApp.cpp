@@ -60,6 +60,7 @@ void ThreeScanApp::startScan() {
     currentAngleChanged = true;
     isFirstAngle = true;
     fullPointCounter = 0;
+    maxPointCount = 0;
 
     // create name and output file
     storage->secureMount();
@@ -68,10 +69,6 @@ void ThreeScanApp::startScan() {
     cloudFile->create(fileName);
 
     // clear buffer
-    for (int i = 0; i < 500; i++) {
-        buffer.add(new Vertex(1.0, 10, 200, 200));
-    }
-
     Serial.println("clearing buffer...");
     buffer.clear();
 
@@ -103,15 +100,12 @@ void ThreeScanApp::endScan() {
     Serial.println("finished scanning!");
 
     // store data
-    if (storage->isConnected()) {
-        Serial.println("writing data...");
-        saveData();
-        Serial.println("done!");
-
-        storage->unmount();
-    }
+    Serial.println("writing data...");
+    saveData();
+    Serial.println("done!");
 
     StatusLed::turnOff();
+
     scanning = false;
 }
 
@@ -136,9 +130,23 @@ void ThreeScanApp::runScan() {
                 if (isFirstAngle) {
                     isFirstAngle = false;
                 } else {
-                    Serial.printf("sync %2f - points: %d average: %lu\n", currentAngle, fullPointCounter,
-                                  std::lround(averagePointCount->getValue()));
-                    averagePointCount->add(pointCounter);
+                    Serial.printf("sync %2f - points: %d max: %d\n", currentAngle, fullPointCounter,
+                                  maxPointCount);
+
+                    // update max point
+                    maxPointCount = (maxPointCount < pointCounter) ? pointCounter : maxPointCount;
+
+                    // check if buffer is still enough
+                    int mpc = static_cast<int>(std::llround(maxPointCount * 1.2));
+                    if (buffer.getMaxSize() < buffer.length() + mpc) {
+                        Serial.println("buffer may exceeding...");
+                        delay(500);
+                        Serial.println("appending buffer...");
+                        cloudFile->appendBuffer(buffer);
+                        buffer.clear();
+
+                        Serial.println("done!");
+                    }
 
                     currentAngle += scanSettings.angleStep;
                     currentAngleChanged = true;
@@ -223,7 +231,6 @@ void ThreeScanApp::saveData() {
     cloudFile->appendBuffer(buffer);
 
     Serial.printf("clearing buffer (%d)\n", buffer.length());
-    //buffer.clear();
 
     Serial.println("closing file...");
     cloudFile->close();

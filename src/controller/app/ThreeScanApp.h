@@ -49,7 +49,7 @@ private:
     int pointCounter = 0;
     int fullPointCounter = 0;
 
-    ExponentialMovingAveragePtr averagePointCount = new ExponentialMovingAverage(0.3);
+    int maxPointCount = 0;
 
     MutableBuffer<Vertex> buffer = MutableBuffer<Vertex>(MAX_BUFFER_SIZE);
 
