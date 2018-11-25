@@ -40,6 +40,8 @@ private:
 
     Timer scanTimer = Timer(33);
 
+    Timer syncTimoutTimer = Timer(2000);
+
     bool scanning = false;
     float currentAngle = 0.0f;
     bool currentAngleChanged = false;

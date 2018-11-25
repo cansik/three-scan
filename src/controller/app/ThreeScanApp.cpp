@@ -91,6 +91,7 @@ void ThreeScanApp::startScan() {
 
     Serial.println("start scanning");
     sweep->startScanning();
+    syncTimoutTimer.reset();
 }
 
 void ThreeScanApp::endScan() {
@@ -116,12 +117,21 @@ void ThreeScanApp::runScan() {
         currentAngleChanged = false;
     }
 
+    // check sync timeout
+    if (syncTimoutTimer.elapsed()) {
+        Serial.println("no sync received, try to start sweep again!");
+        sweep->stopScanning();
+        delay(1000);
+        sweep->startScanning();
+    }
+
     // check if scan is ready
     auto success = false;
     ScanPacket reading = sweep->getReading(success);
 
     if (success) {
         if (reading.isSync()) {
+            syncTimoutTimer.reset();
 
             if (waitForSync) {
                 waitForSync = false;
@@ -145,6 +155,7 @@ void ThreeScanApp::runScan() {
                         cloudFile->appendBuffer(buffer);
                         buffer.clear();
                         Serial.println("done!");
+                        syncTimoutTimer.reset();
                     }
 
                     currentAngle += scanSettings.angleStep;
