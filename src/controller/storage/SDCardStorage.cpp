@@ -4,6 +4,7 @@
 
 #include <SPI.h>
 #include <SD.h>
+#include <util/StatusLed.h>
 #include "SDCardStorage.h"
 
 SDCardStorage::SDCardStorage(uint8_t csPin, uint8_t misoPin, uint8_t mosiPin, uint8_t sckPin) {
@@ -79,10 +80,12 @@ void SDCardStorage::mount() {
     }
 
     connected = true;
+    StatusLed::turnOn();
 }
 
 void SDCardStorage::unmount() {
     SD.end();
+    StatusLed::turnOff();
 }
 
 String SDCardStorage::getFreeFilePath(String prefix, String extension) {
@@ -103,4 +106,15 @@ String SDCardStorage::getFreeFilePath(String prefix, String extension) {
 
     Serial.println("final file name: " + fileName);
     return fileName;
+}
+
+void SDCardStorage::secureMount(unsigned int delayTime) {
+    if (isConnected()) {
+        unmount();
+    }
+
+    delay(delayTime);
+
+    setup();
+    mount();
 }
