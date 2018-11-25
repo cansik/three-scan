@@ -150,12 +150,15 @@ void ThreeScanApp::runScan() {
                     int mpc = static_cast<int>(std::llround(maxPointCount * 1.2));
                     if (buffer.getMaxSize() < buffer.length() + mpc) {
                         Serial.println("buffer may exceeding...");
-                        delay(500);
                         Serial.println("appending buffer...");
                         cloudFile->appendBuffer(buffer);
                         buffer.clear();
                         Serial.println("done!");
                         syncTimoutTimer.reset();
+
+                        // reset scanning
+                        sweep->stopScanning();
+                        sweep->startScanning();
                     }
 
                     currentAngle += scanSettings.angleStep;
