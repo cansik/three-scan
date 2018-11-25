@@ -20,7 +20,7 @@
 #define EEPROM_SIZE 0xFF
 #define EEPROM_START_ADDRESS 0x00
 
-#define MAX_BUFFER_SIZE 1000 // 2^15
+#define MAX_BUFFER_SIZE 1000
 
 class ThreeScanApp : public BaseController {
 private:
@@ -28,7 +28,6 @@ private:
     typedef SweepESP32 *SweepESP32Ptr;
     typedef PreciseServo *PreciseServoPtr;
     typedef CloudFile *CloudFilePtr;
-    typedef ExponentialMovingAverage *ExponentialMovingAveragePtr;
 
     AppSettings settings;
     ScanSettings scanSettings;
@@ -37,8 +36,6 @@ private:
     SweepESP32Ptr sweep;
     PreciseServoPtr servo;
     CloudFilePtr cloudFile;
-
-    Timer scanTimer = Timer(33);
 
     Timer syncTimoutTimer = Timer(2000);
 
