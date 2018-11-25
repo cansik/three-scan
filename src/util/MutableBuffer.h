@@ -5,8 +5,6 @@
 #ifndef THREE_SCAN_MUTABLEBUFFER_H
 #define THREE_SCAN_MUTABLEBUFFER_H
 
-#include <HardwareSerial.h>
-
 template<class T>
 class MutableBuffer {
 private:
