@@ -175,22 +175,7 @@ void handleOsc(OSCMessage &msg) {
     });
 
     msg.dispatch("/threescan/angleStep", [](OSCMessage &msg) {
-        auto data = msg.getFloat(0);
-        auto result = 0.0f;
-
-        if (MathUtils::inRange(data, 0.0f, 0.25f))
-            result = MathUtils::round_to(data, 0.0f, 0.25f);
-
-        if (MathUtils::inRange(data, 0.25f, 0.5f))
-            result = MathUtils::round_to(data, 0.25f, 0.5f);
-
-        if (MathUtils::inRange(data, 0.5f, 0.75f))
-            result = MathUtils::round_to(data, 0.5f, 0.75f);
-
-        if (MathUtils::inRange(data, 0.75f, 1.0f))
-            result = MathUtils::round_to(data, 0.75f, 1.0f);
-
-        app.getSettings().setStartAngle(result);
+        app.getSettings().setAngleStep(MathUtils::round_n(msg.getFloat(0), 2));
     });
 
     sendRefresh();
