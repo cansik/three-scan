@@ -61,6 +61,8 @@ void ThreeScanApp::startScan() {
     maxPointCount = 0;
     currentSliceIteration = 0;
 
+    watch.start();
+
     // create name and output file
     storage->secureMount();
     auto fileName = storage->getFreeFilePath("/scan", ".ply");
@@ -107,6 +109,9 @@ void ThreeScanApp::endScan() {
     Serial.println("done!");
 
     StatusLed::turnOff();
+
+    watch.stop();
+    Serial.printf("Scan Took: %lu ms", watch.elapsed());
 
     scanning = false;
 }

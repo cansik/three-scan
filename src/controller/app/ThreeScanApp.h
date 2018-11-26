@@ -12,6 +12,7 @@
 #include <controller/storage/PLYFile.h>
 #include <controller/storage/CloudFile.h>
 #include <util/ExponentialMovingAverage.h>
+#include <util/StopWatch.h>
 #include "EEPROM.h"
 #include "model/AppSettings.h"
 #include "controller/BaseController.h"
@@ -36,6 +37,7 @@ private:
     CloudFilePtr cloudFile;
 
     Timer syncTimeoutTimer = Timer(2000);
+    StopWatch watch = StopWatch();
 
     bool scanning = false;
     float currentAngle = 0.0f;
