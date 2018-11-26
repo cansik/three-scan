@@ -7,7 +7,6 @@
 #include <driver/sweep/SweepESP32.h>
 #include <driver/motor/PreciseServo.h>
 #include <util/Timer.h>
-#include <model/ScanSettings.h>
 #include <model/Vertex.h>
 #include <util/MutableBuffer.h>
 #include <controller/storage/PLYFile.h>
@@ -30,20 +29,20 @@ private:
     typedef CloudFile *CloudFilePtr;
 
     AppSettings settings;
-    ScanSettings scanSettings;
 
     StoragePtr storage;
     SweepESP32Ptr sweep;
     PreciseServoPtr servo;
     CloudFilePtr cloudFile;
 
-    Timer syncTimoutTimer = Timer(2000);
+    Timer syncTimeoutTimer = Timer(2000);
 
     bool scanning = false;
     float currentAngle = 0.0f;
     bool currentAngleChanged = false;
     bool waitForSync = false;
     bool isFirstAngle = true;
+    bool preventFromMovingOnSync = false;
 
     int pointCounter = 0;
     int fullPointCounter = 0;

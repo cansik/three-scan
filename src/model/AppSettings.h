@@ -5,83 +5,33 @@
 #ifndef TIL_APPSETTINGS_H
 #define TIL_APPSETTINGS_H
 
-#define TIL_SETTINGS_VERSION 1001
+#define THREE_SCAN_SETTINGS_VERSION 1002
 
 struct AppSettings {
 private:
-    int version = TIL_SETTINGS_VERSION;
+    int version = THREE_SCAN_SETTINGS_VERSION;
 
-    // global settings
-    float minBrightness = 0.15f;
+    // scan settings
+    float startAngle = 0.0f;
 
-    float maxBrightness = 0.5f;
+    float endAngle = 180.0f;
 
-    // time star scene settings
-    unsigned long timeStarMinDuration = 3000L;
-
-    unsigned long timeStarMaxDuration = 5000L;
-
-    float timeStarRandomOnFactor = 0.99f;
-
-    float timeStarMinBrightness = 0.0f;
-
-    float timeStarMaxBrightness = 0.7f;
-
-    // wave settings
-    unsigned long waveDuration = 500L;
-
-    unsigned long waveTravelSpeed = 135L;
-
-    float waveMinBrightness = 0.0f;
-
-    float waveMaxBrightness = 1.0f;
+    float angleStep = 0.25f;
 
 public:
     int getVersion() const;
 
-    float getMinBrightness() const;
+    float getStartAngle() const;
 
-    void setMinBrightness(float minBrightness);
+    void setStartAngle(float startAngle);
 
-    float getMaxBrightness() const;
+    float getEndAngle() const;
 
-    void setMaxBrightness(float maxBrightness);
+    void setEndAngle(float endAngle);
 
-    unsigned long getTimeStarMinDuration() const;
+    float getAngleStep() const;
 
-    void setTimeStarMinDuration(unsigned long timeStarMinDuration);
-
-    unsigned long getTimeStarMaxDuration() const;
-
-    void setTimeStarMaxDuration(unsigned long timeStarMaxDuration);
-
-    float getTimeStarRandomOnFactor() const;
-
-    void setTimeStarRandomOnFactor(float timeStarRandomOnFactor);
-
-    float getTimeStarMinBrightness() const;
-
-    void setTimeStarMinBrightness(float timeStarMinBrightness);
-
-    float getTimeStarMaxBrightness() const;
-
-    void setTimeStarMaxBrightness(float timeStarMaxBrightness);
-
-    unsigned long getWaveDuration() const;
-
-    void setWaveDuration(unsigned long waveDuration);
-
-    unsigned long getWaveTravelSpeed() const;
-
-    void setWaveTravelSpeed(unsigned long waveTravelSpeed);
-
-    float getWaveMinBrightness() const;
-
-    void setWaveMinBrightness(float waveMinBrightness);
-
-    float getWaveMaxBrightness() const;
-
-    void setWaveMaxBrightness(float waveMaxBrightness);
+    void setAngleStep(float angleStep);
 };
 
 

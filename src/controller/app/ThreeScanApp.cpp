@@ -19,8 +19,6 @@ ThreeScanApp::ThreeScanApp(StoragePtr storage, SweepESP32Ptr sweep, PreciseServo
 void ThreeScanApp::setup() {
     BaseController::setup();
 
-    scanSettings = ScanSettings();
-
     // setup servo
     Serial.println("setting up servo...");
     servo->setup();
@@ -56,7 +54,7 @@ void ThreeScanApp::loop() {
 void ThreeScanApp::startScan() {
     scanning = true;
     waitForSync = true;
-    currentAngle = scanSettings.startAngle;
+    currentAngle = settings.getStartAngle();
     currentAngleChanged = true;
     isFirstAngle = true;
     fullPointCounter = 0;
@@ -76,8 +74,8 @@ void ThreeScanApp::startScan() {
     sweep->open();
 
     Serial.println("setting sweep settings...");
-    sweep->setMotorSpeed(MOTOR_SPEED_CODE_5_HZ);
-    sweep->setSampleRate(SAMPLE_RATE_CODE_500_HZ);
+    sweep->setMotorSpeed(MOTOR_SPEED_CODE_1_HZ);
+    sweep->setSampleRate(SAMPLE_RATE_CODE_1000_HZ);
 
     Serial.println("waiting for sweep to be ready...");
     sweep->waitUntilMotorReady();
@@ -91,7 +89,7 @@ void ThreeScanApp::startScan() {
 
     Serial.println("start scanning");
     sweep->startScanning();
-    syncTimoutTimer.reset();
+    syncTimeoutTimer.reset();
 }
 
 void ThreeScanApp::endScan() {
@@ -120,10 +118,11 @@ void ThreeScanApp::runScan() {
     }
 
     // check sync timeout
-    if (syncTimoutTimer.elapsed()) {
+    if (syncTimeoutTimer.elapsed()) {
         Serial.println("no sync received, try to start sweep again!");
         sweep->stopScanning();
-        delay(1000);
+        delay(500);
+        preventFromMovingOnSync = true;
         sweep->startScanning();
     }
 
@@ -133,7 +132,7 @@ void ThreeScanApp::runScan() {
 
     if (success) {
         if (reading.isSync()) {
-            syncTimoutTimer.reset();
+            syncTimeoutTimer.reset();
 
             if (waitForSync) {
                 waitForSync = false;
@@ -159,14 +158,19 @@ void ThreeScanApp::runScan() {
                         cloudFile->appendBuffer(buffer);
                         buffer.clear();
                         Serial.println("done!");
-                        syncTimoutTimer.reset();
+                        syncTimeoutTimer.reset();
 
                         // reset scanning
+                        preventFromMovingOnSync = true;
                         sweep->startScanning();
                     }
 
-                    currentAngle += scanSettings.angleStep;
-                    currentAngleChanged = true;
+                    if (preventFromMovingOnSync) {
+                        preventFromMovingOnSync = false;
+                    } else {
+                        currentAngle += settings.getAngleStep();
+                        currentAngleChanged = true;
+                    }
                 }
 
                 pointCounter = 0;
@@ -192,7 +196,7 @@ void ThreeScanApp::runScan() {
     }
 
     // check end condition
-    if (currentAngle > scanSettings.endAngle) {
+    if (currentAngle > settings.getEndAngle()) {
         endScan();
     }
 
@@ -211,7 +215,7 @@ void ThreeScanApp::loadFromEEPROM() {
     Serial.printf("Loaded Version: %d\n", settings.getVersion());
 
     // check version and set default if needed
-    if (settings.getVersion() != TIL_SETTINGS_VERSION) {
+    if (settings.getVersion() != THREE_SCAN_SETTINGS_VERSION) {
         Serial.println("applying default app settings!");
         loadDefaultSettings();
     }
