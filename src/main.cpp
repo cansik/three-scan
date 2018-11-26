@@ -149,15 +149,60 @@ void handleOsc(OSCMessage &msg) {
         app.startScan();
     });
 
+    msg.dispatch("/threescan/save", [](OSCMessage &msg) {
+        app.saveToEEPROM();
+    });
+
+    msg.dispatch("/threescan/load", [](OSCMessage &msg) {
+        app.loadFromEEPROM();
+    });
+
+    msg.dispatch("/threescan/default", [](OSCMessage &msg) {
+        app.loadDefaultSettings();
+    });
+
     msg.dispatch("/threescan/refresh", [](OSCMessage &msg) {
         // just send a refresh
+    });
+
+    // settings
+    msg.dispatch("/threescan/startAngle", [](OSCMessage &msg) {
+        app.getSettings().setStartAngle(MathUtils::round_n(msg.getFloat(0), 0));
+    });
+
+    msg.dispatch("/threescan/endAngle", [](OSCMessage &msg) {
+        app.getSettings().setEndAngle(MathUtils::round_n(msg.getFloat(0), 0));
+    });
+
+    msg.dispatch("/threescan/angleStep", [](OSCMessage &msg) {
+        auto data = msg.getFloat(0);
+        auto result = 0.0f;
+
+        if (MathUtils::inRange(data, 0.0f, 0.25f))
+            result = MathUtils::round_to(data, 0.0f, 0.25f);
+
+        if (MathUtils::inRange(data, 0.25f, 0.5f))
+            result = MathUtils::round_to(data, 0.25f, 0.5f);
+
+        if (MathUtils::inRange(data, 0.5f, 0.75f))
+            result = MathUtils::round_to(data, 0.5f, 0.75f);
+
+        if (MathUtils::inRange(data, 0.75f, 1.0f))
+            result = MathUtils::round_to(data, 0.75f, 1.0f);
+
+        app.getSettings().setStartAngle(result);
     });
 
     sendRefresh();
 }
 
 void sendRefresh() {
-    osc.send("/threescan/sd/mounted", app.isSDMounted());
-    osc.send("/threescan/scan/running", app.isSDMounted());
+    osc.send("/threescan/sd/mounted", app.isSDMounted() ? 1.0f : 0.0f);
+    osc.send("/threescan/scan/running", app.isScanning() ? 1.0f : 0.0f);
     osc.send("/threescan/scan/progress", app.getScanProgress());
+
+    // send settings
+    osc.send("/threescan/startAngle", app.getSettings().getStartAngle());
+    osc.send("/threescan/endAngle", app.getSettings().getEndAngle());
+    osc.send("/threescan/angleStep", app.getSettings().getAngleStep());
 }

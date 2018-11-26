@@ -24,6 +24,12 @@ public:
     static unsigned long millisToSeconds(unsigned long millis);
 
     static float degToRadf(float degree);
+
+    static float round_n(float num, int dec);
+
+    static float round_to(float num, float floorNumber, float ceilNumber);
+
+    static bool inRange(float num, float low, float high);
 };
 
 

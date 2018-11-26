@@ -265,3 +265,7 @@ float ThreeScanApp::getScanProgress() {
 bool ThreeScanApp::isSDMounted() {
     return storage->isConnected();
 }
+
+bool ThreeScanApp::isScanning() const {
+    return scanning;
+}

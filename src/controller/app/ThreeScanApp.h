@@ -53,6 +53,10 @@ private:
 
     void runScan();
 
+    void endScan();
+
+    void saveData();
+
 public:
     ThreeScanApp(StoragePtr storage, SweepESP32Ptr sweep, PreciseServoPtr servo);
 
@@ -70,13 +74,11 @@ public:
 
     void startScan();
 
-    void endScan();
-
-    void saveData();
-
     float getScanProgress();
 
     bool isSDMounted();
+
+    bool isScanning() const;
 };
 
 

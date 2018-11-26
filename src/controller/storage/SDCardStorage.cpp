@@ -85,6 +85,7 @@ void SDCardStorage::mount() {
 
 void SDCardStorage::unmount() {
     SD.end();
+    connected = false;
     StatusLed::turnOff();
 }
 
