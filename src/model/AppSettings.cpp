@@ -47,3 +47,11 @@ float AppSettings::getAngleStep() const {
 void AppSettings::setAngleStep(float angleStep) {
     AppSettings::angleStep = angleStep;
 }
+
+int AppSettings::getSliceIterationCount() const {
+    return sliceIterationCount;
+}
+
+void AppSettings::setSliceIterationCount(int sliceIterationCount) {
+    AppSettings::sliceIterationCount = sliceIterationCount;
+}

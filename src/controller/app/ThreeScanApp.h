@@ -42,12 +42,13 @@ private:
     bool currentAngleChanged = false;
     bool waitForSync = false;
     bool isFirstAngle = true;
-    bool preventFromMovingOnSync = false;
 
     int pointCounter = 0;
     int fullPointCounter = 0;
 
     int maxPointCount = 0;
+
+    int currentSliceIteration = 0;
 
     MutableBuffer<Vertex> buffer = MutableBuffer<Vertex>(MAX_BUFFER_SIZE);
 

@@ -59,6 +59,7 @@ void ThreeScanApp::startScan() {
     isFirstAngle = true;
     fullPointCounter = 0;
     maxPointCount = 0;
+    currentSliceIteration = 0;
 
     // create name and output file
     storage->secureMount();
@@ -122,7 +123,6 @@ void ThreeScanApp::runScan() {
         Serial.println("no sync received, try to start sweep again!");
         sweep->stopScanning();
         delay(500);
-        preventFromMovingOnSync = true;
         sweep->startScanning();
     }
 
@@ -161,21 +161,15 @@ void ThreeScanApp::runScan() {
                         syncTimeoutTimer.reset();
 
                         // reset scanning
-                        preventFromMovingOnSync = true;
                         sweep->startScanning();
                     }
 
-                    /*
-                    if (preventFromMovingOnSync) {
-                        preventFromMovingOnSync = false;
-                    } else {
+                    currentSliceIteration++;
+                    if (settings.getSliceIterationCount() <= currentSliceIteration) {
                         currentAngle += settings.getAngleStep();
                         currentAngleChanged = true;
+                        currentSliceIteration = 0;
                     }
-                     */
-
-                    currentAngle += settings.getAngleStep();
-                    currentAngleChanged = true;
                 }
 
                 pointCounter = 0;

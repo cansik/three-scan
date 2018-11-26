@@ -8,7 +8,7 @@
 #include <cstdint>
 #include <driver/sweep/Sweep.h>
 
-#define THREE_SCAN_SETTINGS_VERSION 1003
+#define THREE_SCAN_SETTINGS_VERSION 1004
 
 
 struct AppSettings {
@@ -21,6 +21,8 @@ private:
     float endAngle = 180.0f;
 
     float angleStep = 0.25f;
+
+    int sliceIterationCount = 2;
 
     const unsigned char *motorSpeed = MOTOR_SPEED_CODE_1_HZ;
 
@@ -48,6 +50,10 @@ public:
     float getAngleStep() const;
 
     void setAngleStep(float angleStep);
+
+    int getSliceIterationCount() const;
+
+    void setSliceIterationCount(int sliceIterationCount);
 };
 
 
