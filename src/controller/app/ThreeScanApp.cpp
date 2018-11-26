@@ -62,6 +62,9 @@ void ThreeScanApp::startScan() {
     currentSliceIteration = 0;
     filteredPoints = 0;
 
+    filterStartAngle = 180.0f - (settings.getStandFilterSize() / 2.0f);
+    filterEndAngle = 180.0f + (settings.getStandFilterSize() / 2.0f);
+
     watch.start();
 
     // create name and output file
@@ -147,8 +150,8 @@ void ThreeScanApp::runScan() {
                 if (isFirstAngle) {
                     isFirstAngle = false;
                 } else {
-                    Serial.printf("sync %2f - points: %d max: %d\n", currentAngle, fullPointCounter,
-                                  maxPointCount);
+                    Serial.printf("sync %2f - points: %d max: %d filtered: %d\n",
+                                  currentAngle, fullPointCounter, maxPointCount, filteredPoints);
 
                     // update max point
                     maxPointCount = (maxPointCount < pointCounter) ? pointCounter : maxPointCount;
@@ -159,8 +162,7 @@ void ThreeScanApp::runScan() {
                         sweep->stopScanning();
                         delay(500);
 
-                        Serial.println("buffer may exceeding...");
-                        Serial.println("appending buffer...");
+                        Serial.print("buffer may exceeding...appending...");
                         cloudFile->appendBuffer(buffer);
                         buffer.clear();
                         Serial.println("done!");
@@ -189,10 +191,12 @@ void ThreeScanApp::runScan() {
         if (waitForSync)
             return;
 
-        // filter by signal strength
+        // filter by signal strength and stand angle
         auto signalFilter = reading.getSignalStrength() < settings.getMinSignalStrength();
-        
-        if (signalFilter) {
+        auto angle = abs(reading.getAngleDegrees());
+        auto standFilter = angle >= filterStartAngle && angle <= filterEndAngle;
+
+        if (signalFilter || standFilter) {
             filteredPoints++;
             return;
         }

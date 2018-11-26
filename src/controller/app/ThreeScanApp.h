@@ -53,6 +53,9 @@ private:
 
     int currentSliceIteration = 0;
 
+    float filterStartAngle = 0;
+    float filterEndAngle = 0;
+
     MutableBuffer<Vertex> buffer = MutableBuffer<Vertex>(MAX_BUFFER_SIZE);
 
     void runScan();
