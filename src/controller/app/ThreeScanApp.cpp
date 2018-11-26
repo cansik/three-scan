@@ -60,6 +60,7 @@ void ThreeScanApp::startScan() {
     fullPointCounter = 0;
     maxPointCount = 0;
     currentSliceIteration = 0;
+    filteredPoints = 0;
 
     watch.start();
 
@@ -187,6 +188,14 @@ void ThreeScanApp::runScan() {
 
         if (waitForSync)
             return;
+
+        // filter by signal strength
+        auto signalFilter = reading.getSignalStrength() < settings.getMinSignalStrength();
+        
+        if (signalFilter) {
+            filteredPoints++;
+            return;
+        }
 
         // new package received
         //Serial.printf("%d. (%2f°):\t%2f°\t%d cm\n", pointCounter, currentAngle, reading.getAngleDegrees(),

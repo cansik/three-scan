@@ -47,6 +47,7 @@ private:
 
     int pointCounter = 0;
     int fullPointCounter = 0;
+    int filteredPoints = 0;
 
     int maxPointCount = 0;
 

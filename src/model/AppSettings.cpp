@@ -48,10 +48,26 @@ void AppSettings::setAngleStep(float angleStep) {
     AppSettings::angleStep = angleStep;
 }
 
-int AppSettings::getSliceIterationCount() const {
+unsigned int AppSettings::getSliceIterationCount() const {
     return sliceIterationCount;
 }
 
-void AppSettings::setSliceIterationCount(int sliceIterationCount) {
+void AppSettings::setSliceIterationCount(unsigned int sliceIterationCount) {
     AppSettings::sliceIterationCount = sliceIterationCount;
+}
+
+unsigned int AppSettings::getStandFilterSize() const {
+    return standFilterSize;
+}
+
+void AppSettings::setStandFilterSize(unsigned int standFilterSize) {
+    AppSettings::standFilterSize = standFilterSize;
+}
+
+unsigned int AppSettings::getMinSignalStrength() const {
+    return minSignalStrength;
+}
+
+void AppSettings::setMinSignalStrength(unsigned int minSignalStrength) {
+    AppSettings::minSignalStrength = minSignalStrength;
 }

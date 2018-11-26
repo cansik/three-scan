@@ -22,7 +22,11 @@ private:
 
     float angleStep = 0.25f;
 
-    int sliceIterationCount = 2;
+    unsigned int sliceIterationCount = 2;
+
+    unsigned int standFilterSize = 80;
+
+    unsigned int minSignalStrength = 50;
 
     const unsigned char *motorSpeed = MOTOR_SPEED_CODE_1_HZ;
 
@@ -51,9 +55,17 @@ public:
 
     void setAngleStep(float angleStep);
 
-    int getSliceIterationCount() const;
+    unsigned int getSliceIterationCount() const;
 
-    void setSliceIterationCount(int sliceIterationCount);
+    void setSliceIterationCount(unsigned int sliceIterationCount);
+
+    unsigned int getStandFilterSize() const;
+
+    void setStandFilterSize(unsigned int standFilterSize);
+
+    unsigned int getMinSignalStrength() const;
+
+    void setMinSignalStrength(unsigned int minSignalStrength);
 };
 
 
