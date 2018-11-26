@@ -73,6 +73,10 @@ public:
     void endScan();
 
     void saveData();
+
+    float getScanProgress();
+
+    bool isSDMounted();
 };
 
 

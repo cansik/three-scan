@@ -74,8 +74,8 @@ void ThreeScanApp::startScan() {
     sweep->open();
 
     Serial.println("setting sweep settings...");
-    sweep->setMotorSpeed(MOTOR_SPEED_CODE_1_HZ);
-    sweep->setSampleRate(SAMPLE_RATE_CODE_1000_HZ);
+    sweep->setMotorSpeed(settings.getMotorSpeed());
+    sweep->setSampleRate(settings.getSampleRate());
 
     Serial.println("waiting for sweep to be ready...");
     sweep->waitUntilMotorReady();
@@ -256,4 +256,12 @@ void ThreeScanApp::saveData() {
 
     Serial.println("closing file...");
     cloudFile->close();
+}
+
+float ThreeScanApp::getScanProgress() {
+    return MathUtils::map(currentAngle, settings.getStartAngle(), settings.getEndAngle(), 0.0f, 1.0f);
+}
+
+bool ThreeScanApp::isSDMounted() {
+    return storage->isConnected();
 }

@@ -6,9 +6,10 @@
 #include <SD.h>
 #include <controller/storage/SDCardStorage.h>
 #include <util/StatusLed.h>
-#include <driver/Sweep/Sweep.h>
+#include <driver/sweep/Sweep.h>
 #include <driver/sweep/SweepESP32.h>
 #include <driver/motor/PreciseServo.h>
+#include <controller/network/HeartBeat.h>
 
 #include "controller/BaseController.h"
 #include "controller/app/ThreeScanApp.h"
@@ -36,7 +37,7 @@
 #define DEVICE_NAME "three-scanner"
 
 #define SSID_NAME "three-scan"
-#define SSID_PASSWORD "TILbildspur"
+#define SSID_PASSWORD "3scan-app"
 
 #define OTA_PASSWORD "bildspur"
 #define OTA_PORT 8266
@@ -58,6 +59,7 @@ auto osc = OscController(OSC_IN_PORT, OSC_OUT_PORT);
 auto sdCardStorage = SDCardStorage(SD_SELECT_PIN);
 auto sweep = SweepESP32(SWEEP_RX, SWEEP_TX, PWR_PIN_1, PWR_PIN_2);
 auto servo = PreciseServo(SERVO_PIN);
+auto heartbeat = HeartBeat(1000);
 
 auto app = ThreeScanApp(&sdCardStorage, &sweep, &servo);
 
@@ -66,7 +68,8 @@ BaseControllerPtr controllers[] = {
         &network,
         &ota,
         &osc,
-        &app
+        &app,
+        &heartbeat
 };
 
 // methods
@@ -86,7 +89,8 @@ void setup() {
     StatusLed::setup();
 
     // wait some seconds for debugging
-    delay(5000);
+    if (Serial)
+        delay(5000);
 
     StatusLed::turnOff();
 
@@ -103,6 +107,7 @@ void setup() {
 
     // setup handlers
     osc.onMessageReceived(handleOsc);
+    heartbeat.onHeartbeat(sendRefresh);
 
     // add osc mdns
     MDNS.addService("_osc", "_udp", OSC_IN_PORT);
@@ -144,9 +149,15 @@ void handleOsc(OSCMessage &msg) {
         app.startScan();
     });
 
+    msg.dispatch("/threescan/refresh", [](OSCMessage &msg) {
+        // just send a refresh
+    });
+
     sendRefresh();
 }
 
 void sendRefresh() {
-    osc.send("/threescan/hello", 0);
+    osc.send("/threescan/sd/mounted", app.isSDMounted());
+    osc.send("/threescan/scan/running", app.isSDMounted());
+    osc.send("/threescan/scan/progress", app.getScanProgress());
 }
