@@ -36,7 +36,7 @@ Vector3f Vertex::getSphericalPosition() const {
     auto phi = MathUtils::degToRadf(polarAngle);
 
     auto x = static_cast<float>(radius * sin(theta) * cos(phi));
-    auto y = static_cast<float>(-1.0f * radius * sin(theta) * sin(phi));
+    auto y = static_cast<float>(radius * sin(theta) * sin(phi));
     auto z = static_cast<float>(radius * cos(theta));
 
     return Vector3f{x, y, z};

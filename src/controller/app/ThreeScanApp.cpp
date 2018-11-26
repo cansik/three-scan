@@ -165,12 +165,17 @@ void ThreeScanApp::runScan() {
                         sweep->startScanning();
                     }
 
+                    /*
                     if (preventFromMovingOnSync) {
                         preventFromMovingOnSync = false;
                     } else {
                         currentAngle += settings.getAngleStep();
                         currentAngleChanged = true;
                     }
+                     */
+
+                    currentAngle += settings.getAngleStep();
+                    currentAngleChanged = true;
                 }
 
                 pointCounter = 0;
