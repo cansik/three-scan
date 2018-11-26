@@ -117,4 +117,14 @@ void SDCardStorage::secureMount(unsigned int delayTime) {
 
     setup();
     mount();
+
+    int mountTries = 1;
+    while (!isConnected()) {
+        Serial.printf("try to mount (%d)...\n", mountTries);
+        setup();
+        delay(500);
+        mount();
+        delay(500);
+        mountTries++;
+    }
 }
