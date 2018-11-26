@@ -50,6 +50,8 @@ public:
 
     void send(const char *route, int value);
 
+    void send(const char *route, unsigned int value);
+
     void send(const char *route, float value);
 };
 

@@ -175,7 +175,7 @@ void handleOsc(OSCMessage &msg) {
     });
 
     msg.dispatch("/threescan/angleStep", [](OSCMessage &msg) {
-        app.getSettings().setAngleStep(MathUtils::round_n(msg.getFloat(0), 2));
+        app.getSettings().setAngleStep(msg.getFloat(0));
     });
 
     sendRefresh();

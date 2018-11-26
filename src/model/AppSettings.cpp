@@ -24,14 +24,6 @@ void AppSettings::setEndAngle(float endAngle) {
     AppSettings::endAngle = endAngle;
 }
 
-float AppSettings::getAngleStep() const {
-    return angleStep;
-}
-
-void AppSettings::setAngleStep(float angleStep) {
-    AppSettings::angleStep = angleStep;
-}
-
 const unsigned char *AppSettings::getMotorSpeed() const {
     return motorSpeed;
 }
@@ -46,4 +38,12 @@ const unsigned char *AppSettings::getSampleRate() const {
 
 void AppSettings::setSampleRate(const unsigned char *sampleRate) {
     AppSettings::sampleRate = sampleRate;
+}
+
+float AppSettings::getAngleStep() const {
+    return angleStep;
+}
+
+void AppSettings::setAngleStep(float angleStep) {
+    AppSettings::angleStep = angleStep;
 }

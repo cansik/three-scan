@@ -10,6 +10,7 @@
 
 #define THREE_SCAN_SETTINGS_VERSION 1002
 
+
 struct AppSettings {
 private:
     int version = THREE_SCAN_SETTINGS_VERSION;
@@ -36,10 +37,6 @@ public:
 
     void setEndAngle(float endAngle);
 
-    float getAngleStep() const;
-
-    void setAngleStep(float angleStep);
-
     const unsigned char *getMotorSpeed() const;
 
     void setMotorSpeed(const unsigned char *motorSpeed);
@@ -47,6 +44,10 @@ public:
     const unsigned char *getSampleRate() const;
 
     void setSampleRate(const unsigned char *sampleRate);
+
+    float getAngleStep() const;
+
+    void setAngleStep(float angleStep);
 };
 
 

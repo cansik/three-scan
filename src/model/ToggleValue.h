@@ -7,17 +7,14 @@
 
 #include <array>
 
-#define toggleValueArrayLength(x) (sizeof(x) / sizeof(*x))
-
-template<class T>
+template<class T, unsigned int SIZE>
 struct ToggleValue {
 private:
-    const unsigned int length = 0;
     unsigned int selectedIndex = 0;
     const T values[];
 
 public:
-    ToggleValue(const T values[], unsigned int selectedIndex = 0);
+    explicit ToggleValue(std::array<T, SIZE> values, unsigned int selectedIndex = 0);
 
     const T value() const;
 
@@ -32,44 +29,43 @@ public:
     const unsigned int index() const;
 };
 
-template<class T>
-ToggleValue<T>::ToggleValue(const T values[], unsigned int selectedIndex
-) {
+template<class T, unsigned int SIZE>
+ToggleValue<T, SIZE>::ToggleValue(std::array<T, SIZE> values, unsigned int selectedIndex) {
     this->values = values;
     this->selectedIndex = selectedIndex;
     this->length = toggleValueArrayLength(values);
 }
 
-template<class T>
-const T ToggleValue<T>::get(unsigned int index) const {
+template<class T, unsigned int SIZE>
+const T ToggleValue<T, SIZE>::get(unsigned int index) const {
     return &values[index];
 }
 
-template<class T>
-const unsigned int ToggleValue<T>::getIndex(T &value) const {
-    for (unsigned int i = 0; i < length; i++)
+template<class T, unsigned int SIZE>
+const unsigned int ToggleValue<T, SIZE>::getIndex(T &value) const {
+    for (unsigned int i = 0; i < SIZE; i++)
         if (value[i] == value)
             return i;
     return 0;
 }
 
-template<class T>
-void ToggleValue<T>::set(T &value) {
+template<class T, unsigned int SIZE>
+void ToggleValue<T, SIZE>::set(T &value) {
     setIndex(getIndex(value));
 }
 
-template<class T>
-void ToggleValue<T>::setIndex(unsigned int index) {
+template<class T, unsigned int SIZE>
+void ToggleValue<T, SIZE>::setIndex(unsigned int index) {
     selectedIndex = index;
 }
 
-template<class T>
-const T ToggleValue<T>::value() const {
+template<class T, unsigned int SIZE>
+const T ToggleValue<T, SIZE>::value() const {
     return values[selectedIndex];
 }
 
-template<class T>
-const unsigned int ToggleValue<T>::index() const {
+template<class T, unsigned int SIZE>
+const unsigned int ToggleValue<T, SIZE>::index() const {
     return selectedIndex;
 }
 

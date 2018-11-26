@@ -42,7 +42,7 @@ void OscController::sendMessage(OSCMessage &msg) {
 }
 
 void OscController::routeOSCMessage(OSCMessage &msg) {
-    if(onMessageReceivedCallback)
+    if (onMessageReceivedCallback)
         onMessageReceivedCallback(msg);
 }
 
@@ -66,6 +66,12 @@ void OscController::send(const char *route, int value) {
 }
 
 void OscController::send(const char *route, float value) {
+    OSCMessage msg(route);
+    msg.add(value);
+    sendMessage(msg);
+}
+
+void OscController::send(const char *route, unsigned int value) {
     OSCMessage msg(route);
     msg.add(value);
     sendMessage(msg);
