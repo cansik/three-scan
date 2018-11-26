@@ -51,4 +51,4 @@ add_custom_target(
         WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
 )
 
-add_executable(${PROJECT_NAME} ${SRC_LIST} src/driver/sweep/SweepESP32.cpp src/driver/sweep/SweepESP32.h src/model/Vertex.cpp src/model/Vertex.h src/model/Vector3.h src/util/MutableBuffer.h src/controller/storage/PLYFile.cpp src/controller/storage/PLYFile.h src/controller/storage/CloudFile.cpp src/controller/storage/CloudFile.h src/util/ExponentialMovingAverage.cpp src/util/ExponentialMovingAverage.h src/controller/network/HeartBeat.cpp src/controller/network/HeartBeat.h)
+add_executable(${PROJECT_NAME} ${SRC_LIST} src/driver/sweep/SweepESP32.cpp src/driver/sweep/SweepESP32.h src/model/Vertex.cpp src/model/Vertex.h src/model/Vector3.h src/util/MutableBuffer.h src/controller/storage/PLYFile.cpp src/controller/storage/PLYFile.h src/controller/storage/CloudFile.cpp src/controller/storage/CloudFile.h src/util/ExponentialMovingAverage.cpp src/util/ExponentialMovingAverage.h src/controller/network/HeartBeat.cpp src/controller/network/HeartBeat.h src/model/ToggleValue.cpp src/model/ToggleValue.h)
