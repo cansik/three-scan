@@ -68,8 +68,12 @@ BaseControllerPtr controllers[] = {
         &network,
         &ota,
         &osc,
-        &app,
         &heartbeat
+};
+
+// scan controller list
+BaseControllerPtr scanControllers[] = {
+        &app
 };
 
 // methods
@@ -78,6 +82,8 @@ void handleOsc(OSCMessage &msg);
 void sendRefresh();
 
 void checkDebugButton();
+
+void scanLoop(void *parameter);
 
 void setup() {
     Serial.begin(BAUD_RATE);
@@ -105,6 +111,20 @@ void setup() {
         controller->setup();
     }
 
+    // setup lidar controller
+    for (auto &controller : scanControllers) {
+        controller->setup();
+    }
+
+    // run scan task
+    xTaskCreate(
+            scanLoop,          /* Task function. */
+            "TaskOne",        /* String with name of task. */
+            10000,            /* Stack size in bytes. */
+            nullptr,             /* Parameter passed as input of the task */
+            1,                /* Priority of the task. */
+            nullptr);            /* Task handle. */
+
     // setup handlers
     osc.onMessageReceived(handleOsc);
     heartbeat.onHeartbeat(sendRefresh);
@@ -126,6 +146,13 @@ void loop() {
     }
 }
 
+void scanLoop(void *parameter) {
+    for (auto &controller : scanControllers) {
+        controller->loop();
+    }
+    vTaskDelete(nullptr);
+}
+
 void checkDebugButton() {
     auto state = digitalRead(DEBUG_BTN_PIN);
 
@@ -134,7 +161,8 @@ void checkDebugButton() {
         debugButtonState = true;
 
         Serial.println("debug button pressed!");
-        app.startScan();
+        if (!app.isScanning())
+            app.startScan();
     }
 
     if (!state && debugButtonState) {

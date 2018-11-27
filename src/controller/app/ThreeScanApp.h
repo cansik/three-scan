@@ -39,7 +39,7 @@ private:
     Timer syncTimeoutTimer = Timer(2000);
     StopWatch watch = StopWatch();
 
-    bool scanning = false;
+    volatile bool scanning = false;
     float currentAngle = 0.0f;
     bool currentAngleChanged = false;
     bool waitForSync = false;
