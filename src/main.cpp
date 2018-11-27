@@ -121,12 +121,12 @@ void setup() {
 
     // run scan task
     xTaskCreate(
-            scanLoop,          /* Task function. */
+            scanLoop,         /* Task function. */
             "TaskOne",        /* String with name of task. */
             10000,            /* Stack size in bytes. */
-            nullptr,             /* Parameter passed as input of the task */
+            nullptr,          /* Parameter passed as input of the task */
             1,                /* Priority of the task. */
-            nullptr);            /* Task handle. */
+            nullptr);         /* Task handle. */
 
     // setup handlers
     osc.onMessageReceived(handleOsc);
