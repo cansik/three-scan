@@ -56,3 +56,7 @@ float MathUtils::round_to(float num, float floorNumber, float ceilNumber) {
 bool MathUtils::inRange(float num, float low, float high) {
     return (num >= low && num < high);
 }
+
+String MathUtils::timeStampString(unsigned long t) {
+    return String(t / 1000 / 60 / 60) + ":" + String(t / 1000 / 60) + ":" + String(t / 1000);
+}

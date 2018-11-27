@@ -310,3 +310,7 @@ volatile bool ThreeScanApp::isWriting() const {
 const String &ThreeScanApp::getPath() const {
     return cloudFile->getPath();
 }
+
+unsigned long ThreeScanApp::getElapsedTime() {
+    return watch.elapsed();
+}

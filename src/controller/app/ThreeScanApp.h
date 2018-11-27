@@ -98,6 +98,8 @@ public:
     volatile bool isWriting() const;
 
     const String &getPath() const;
+
+    unsigned long getElapsedTime();
 };
 
 

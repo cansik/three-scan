@@ -5,6 +5,7 @@
 #ifndef SILVA_FLOATUTIL_H
 #define SILVA_FLOATUTIL_H
 
+#include <WString.h>
 
 class MathUtils {
 protected:
@@ -30,6 +31,8 @@ public:
     static float round_to(float num, float floorNumber, float ceilNumber);
 
     static bool inRange(float num, float low, float high);
+
+    static String timeStampString(unsigned long t);
 };
 
 

@@ -287,25 +287,26 @@ void sendRefresh() {
     osc.send("/threescan/sliceiteration/text", app.getSettings().getSliceIterationCount());
     osc.send("/threescan/strengthfilter", app.getSettings().getMinSignalStrength());
     osc.send("/threescan/scan/file/text", app.getPath());
+    osc.send("/threescan/scan/time/text", MathUtils::timeStampString(app.getElapsedTime()));
 
     // motor speed
-    if (app.getSettings().getMotorSpeed() == MOTOR_SPEED_CODE_1_HZ)
-        osc.send("/threescan/samplerate/text", "1 Hz");
+    if (app.getSettings().getMotorSpeed()[1] == '1')
+        osc.send("/threescan/motorspeed/text", "1 Hz");
 
-    if (app.getSettings().getMotorSpeed() == MOTOR_SPEED_CODE_5_HZ)
-        osc.send("/threescan/samplerate/text", "5 Hz");
+    if (app.getSettings().getMotorSpeed()[1] == '5')
+        osc.send("/threescan/motorspeed/text", "5 Hz");
 
-    if (app.getSettings().getMotorSpeed() == MOTOR_SPEED_CODE_10_HZ)
-        osc.send("/threescan/samplerate/text", "10 Hz");
+    if (app.getSettings().getMotorSpeed()[0] == '1' && app.getSettings().getMotorSpeed()[1] == '0')
+        osc.send("/threescan/motorspeed/text", "10 Hz");
 
     // sample rate
-    if (app.getSettings().getSampleRate() == SAMPLE_RATE_CODE_500_HZ)
+    if (app.getSettings().getSampleRate()[1] == '1')
         osc.send("/threescan/samplerate/text", "500 Hz");
 
-    if (app.getSettings().getSampleRate() == SAMPLE_RATE_CODE_750_HZ)
+    if (app.getSettings().getSampleRate()[1] == '2')
         osc.send("/threescan/samplerate/text", "750 Hz");
 
-    if (app.getSettings().getSampleRate() == SAMPLE_RATE_CODE_1000_HZ)
+    if (app.getSettings().getSampleRate()[1] == '3')
         osc.send("/threescan/samplerate/text", "1000 Hz");
 
 
