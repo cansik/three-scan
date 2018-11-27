@@ -58,5 +58,9 @@ bool MathUtils::inRange(float num, float low, float high) {
 }
 
 String MathUtils::timeStampString(unsigned long t) {
-    return String(t / 1000 / 60 / 60) + ":" + String(t / 1000 / 60) + ":" + String(t / 1000);
+    auto h = t / 1000 / 60 / 60;
+    auto m = (t - (h * 1000 * 60 * 60)) / 1000 / 60;
+    auto s = (t - (h * 1000 * 60 * 60) - (m * 1000 * 60)) / 1000;
+
+    return String(h) + ":" + String(m) + ":" + String(s);
 }
