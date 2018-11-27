@@ -63,7 +63,7 @@ auto osc = OscController(OSC_IN_PORT, OSC_OUT_PORT);
 auto sdCardStorage = SDCardStorage(SD_SELECT_PIN);
 auto sweep = SweepESP32(SWEEP_RX, SWEEP_TX, PWR_PIN_1, PWR_PIN_2);
 auto servo = PreciseServo(SERVO_PIN);
-auto heartbeat = HeartBeat(1000);
+auto heartBeatTimer = Timer(1000);
 
 auto app = ThreeScanApp(&sdCardStorage, &sweep, &servo);
 
@@ -71,8 +71,7 @@ auto app = ThreeScanApp(&sdCardStorage, &sweep, &servo);
 BaseControllerPtr controllers[] = {
         &network,
         &ota,
-        &osc,
-        &heartbeat
+        &osc
 };
 
 // scan controller list
@@ -131,7 +130,6 @@ void setup() {
 
     // setup handlers
     osc.onMessageReceived(handleOsc);
-    heartbeat.onHeartbeat(sendRefresh);
 
     // add osc mdns
     MDNS.addService("_osc", "_udp", OSC_IN_PORT);
@@ -147,6 +145,9 @@ void loop() {
 
         // btn
         checkDebugButton();
+
+        if (heartBeatTimer.elapsed())
+            sendRefresh();
     }
 }
 
