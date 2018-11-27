@@ -18,7 +18,6 @@ void HeartBeat::loop() {
     BaseController::loop();
 
     if (beatTimer->elapsed()) {
-        Serial.println("sending heartbeat...");
         if (onHeartbeatCallback)
             onHeartbeatCallback();
     }
