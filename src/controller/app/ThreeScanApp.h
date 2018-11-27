@@ -40,14 +40,14 @@ private:
     StopWatch watch = StopWatch();
 
     volatile bool scanning = false;
-    float currentAngle = 0.0f;
+    volatile float currentAngle = 0.0f;
     bool currentAngleChanged = false;
     bool waitForSync = false;
     bool isFirstAngle = true;
 
     int pointCounter = 0;
-    int fullPointCounter = 0;
-    int filteredPoints = 0;
+    volatile int fullPointCounter = 0;
+    volatile int filteredPoints = 0;
 
     int maxPointCount = 0;
 
@@ -86,6 +86,12 @@ public:
     bool isSDMounted();
 
     bool isScanning() const;
+
+    volatile float getCurrentAngle() const;
+
+    volatile int getFullPointCounter() const;
+
+    volatile int getFilteredPoints() const;
 };
 
 

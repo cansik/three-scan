@@ -286,3 +286,15 @@ bool ThreeScanApp::isSDMounted() {
 bool ThreeScanApp::isScanning() const {
     return scanning;
 }
+
+volatile float ThreeScanApp::getCurrentAngle() const {
+    return currentAngle;
+}
+
+volatile int ThreeScanApp::getFullPointCounter() const {
+    return fullPointCounter;
+}
+
+volatile int ThreeScanApp::getFilteredPoints() const {
+    return filteredPoints;
+}

@@ -46,6 +46,8 @@
 #define OSC_IN_PORT 8000
 
 bool debugButtonState = false;
+volatile bool scanLoopRunning = true;
+volatile bool requestStartScan = false;
 
 // typedefs
 typedef BaseController *BaseControllerPtr;
@@ -147,8 +149,15 @@ void loop() {
 }
 
 void scanLoop(void *parameter) {
-    for (auto &controller : scanControllers) {
-        controller->loop();
+    while (scanLoopRunning) {
+        if (requestStartScan) {
+            requestStartScan = false;
+            app.startScan();
+        }
+
+        for (auto &controller : scanControllers) {
+            controller->loop();
+        }
     }
     vTaskDelete(nullptr);
 }
@@ -162,7 +171,7 @@ void checkDebugButton() {
 
         Serial.println("debug button pressed!");
         if (!app.isScanning())
-            app.startScan();
+            requestStartScan = true;
     }
 
     if (!state && debugButtonState) {
@@ -174,7 +183,8 @@ void checkDebugButton() {
 void handleOsc(OSCMessage &msg) {
     // global
     msg.dispatch("/threescan/start", [](OSCMessage &msg) {
-        app.startScan();
+        if (!app.isScanning())
+            requestStartScan = true;
     });
 
     msg.dispatch("/threescan/save", [](OSCMessage &msg) {
@@ -210,12 +220,17 @@ void handleOsc(OSCMessage &msg) {
 }
 
 void sendRefresh() {
+    // send infos
     osc.send("/threescan/sd/mounted", app.isSDMounted() ? 1.0f : 0.0f);
     osc.send("/threescan/scan/running", app.isScanning() ? 1.0f : 0.0f);
     osc.send("/threescan/scan/progress", app.getScanProgress());
+    osc.send("/threescan/scan/progress/text", String(app.getScanProgress() * 100.0f, 0) + "%");
+    osc.send("/threescan/scan/points/text", String(app.getFullPointCounter()));
+    osc.send("/threescan/scan/filteredpoints/text", String(app.getFilteredPoints()));
+    osc.send("/threescan/scan/angle/text", String(MathUtils::round_n(app.getCurrentAngle(), 2), 2) + "°");
 
     // send settings
     osc.send("/threescan/startAngle", app.getSettings().getStartAngle());
     osc.send("/threescan/endAngle", app.getSettings().getEndAngle());
-    osc.send("/threescan/angleStep", app.getSettings().getAngleStep());
+    osc.send("/threescan/angleStep/text", app.getSettings().getAngleStep());
 }

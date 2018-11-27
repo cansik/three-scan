@@ -76,3 +76,9 @@ void OscController::send(const char *route, unsigned int value) {
     msg.add(value);
     sendMessage(msg);
 }
+
+void OscController::send(const char *route, String value) {
+    OSCMessage msg(route);
+    msg.add(value.c_str());
+    sendMessage(msg);
+}
