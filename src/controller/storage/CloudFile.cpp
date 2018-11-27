@@ -23,6 +23,10 @@ void CloudFile::appendBuffer(MutableBuffer<Vertex> &vertices) {
     for (unsigned int i = 0; i < vertices.length(); i++) {
         appendSingle(vertices.get(i));
         vertexCounter++;
+
+        // notify watchdog
+        if (vertexCounter % 100 == 0)
+            delay(1);
     }
     closeFile();
 }
