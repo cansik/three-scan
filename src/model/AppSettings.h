@@ -20,9 +20,9 @@ private:
 
     float endAngle = 180.0f;
 
-    float angleStep = 0.25f;
+    float angleStep = 1.0f;
 
-    unsigned int sliceIterationCount = 2;
+    unsigned int sliceIterationCount = 1;
 
     unsigned int standFilterSize = 80;
 

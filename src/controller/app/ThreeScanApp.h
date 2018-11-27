@@ -41,6 +41,8 @@ private:
 
     volatile bool scanning = false;
     volatile float currentAngle = 0.0f;
+    volatile bool writing = false;
+
     bool currentAngleChanged = false;
     bool waitForSync = false;
     bool isFirstAngle = true;
@@ -59,8 +61,6 @@ private:
     MutableBuffer<Vertex> buffer = MutableBuffer<Vertex>(MAX_BUFFER_SIZE);
 
     void runScan();
-
-    void endScan();
 
     void saveData();
 
@@ -81,6 +81,8 @@ public:
 
     void startScan();
 
+    void endScan();
+
     float getScanProgress();
 
     bool isSDMounted();
@@ -92,6 +94,10 @@ public:
     volatile int getFullPointCounter() const;
 
     volatile int getFilteredPoints() const;
+
+    volatile bool isWriting() const;
+
+    const String &getPath() const;
 };
 
 

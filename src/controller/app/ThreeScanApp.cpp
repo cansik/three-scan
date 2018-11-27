@@ -159,6 +159,7 @@ void ThreeScanApp::runScan() {
                     // check if buffer is still enough
                     int mpc = static_cast<int>(std::llround(maxPointCount * 1.2));
                     if (buffer.getMaxSize() < buffer.length() + mpc) {
+                        writing = true;
                         sweep->stopScanning();
                         delay(500);
 
@@ -169,6 +170,7 @@ void ThreeScanApp::runScan() {
                         syncTimeoutTimer.reset();
 
                         // reset scanning
+                        writing = false;
                         sweep->startScanning();
                     }
 
@@ -264,6 +266,7 @@ void ThreeScanApp::loadDefaultSettings() {
 
 void ThreeScanApp::saveData() {
     delay(1000);
+    writing = true;
 
     Serial.println("appending buffer...");
     cloudFile->appendBuffer(buffer);
@@ -273,6 +276,7 @@ void ThreeScanApp::saveData() {
 
     Serial.println("closing file...");
     cloudFile->close();
+    writing = false;
 }
 
 float ThreeScanApp::getScanProgress() {
@@ -297,4 +301,12 @@ volatile int ThreeScanApp::getFullPointCounter() const {
 
 volatile int ThreeScanApp::getFilteredPoints() const {
     return filteredPoints;
+}
+
+volatile bool ThreeScanApp::isWriting() const {
+    return writing;
+}
+
+const String &ThreeScanApp::getPath() const {
+    return cloudFile->getPath();
 }

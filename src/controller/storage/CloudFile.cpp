@@ -55,3 +55,7 @@ void CloudFile::appendSingle(CloudFile::VertexPtr vertex) {
                + " " + String(color) + " " + String(color) + " " + String(color) + "\n";
     file.print(m);
 }
+
+const String &CloudFile::getPath() const {
+    return path;
+}

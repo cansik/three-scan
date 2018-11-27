@@ -47,7 +47,9 @@
 
 bool debugButtonState = false;
 volatile bool scanLoopRunning = true;
+
 volatile bool requestStartScan = false;
+volatile bool requestStopScan = false;
 
 // typedefs
 typedef BaseController *BaseControllerPtr;
@@ -150,9 +152,17 @@ void loop() {
 
 void scanLoop(void *parameter) {
     while (scanLoopRunning) {
+
+        // start
         if (requestStartScan) {
             requestStartScan = false;
             app.startScan();
+        }
+
+        // stop
+        if (requestStopScan) {
+            requestStopScan = false;
+            app.endScan();
         }
 
         for (auto &controller : scanControllers) {
@@ -187,6 +197,11 @@ void handleOsc(OSCMessage &msg) {
             requestStartScan = true;
     });
 
+    msg.dispatch("/threescan/stop", [](OSCMessage &msg) {
+        if (app.isScanning())
+            requestStopScan = true;
+    });
+
     msg.dispatch("/threescan/save", [](OSCMessage &msg) {
         app.saveToEEPROM();
     });
@@ -216,12 +231,48 @@ void handleOsc(OSCMessage &msg) {
         app.getSettings().setAngleStep(msg.getFloat(0));
     });
 
+    msg.dispatch("/threescan/sliceiteration", [](OSCMessage &msg) {
+        app.getSettings().setSliceIterationCount(static_cast<unsigned int>(msg.getFloat(0)));
+    });
+
+    msg.dispatch("/threescan/samplerate", [](OSCMessage &msg) {
+        int sampleRate = static_cast<int>(msg.getFloat(0));
+
+        if (sampleRate == 500)
+            app.getSettings().setSampleRate(SAMPLE_RATE_CODE_500_HZ);
+
+        if (sampleRate == 750)
+            app.getSettings().setSampleRate(SAMPLE_RATE_CODE_750_HZ);
+
+        if (sampleRate == 1000)
+            app.getSettings().setSampleRate(SAMPLE_RATE_CODE_1000_HZ);
+    });
+
+    msg.dispatch("/threescan/motorspeed", [](OSCMessage &msg) {
+        int motorSpeed = static_cast<int>(msg.getFloat(0));
+
+        if (motorSpeed == 1)
+            app.getSettings().setMotorSpeed(MOTOR_SPEED_CODE_1_HZ);
+
+        if (motorSpeed == 5)
+            app.getSettings().setMotorSpeed(MOTOR_SPEED_CODE_5_HZ);
+
+        if (motorSpeed == 10)
+            app.getSettings().setMotorSpeed(MOTOR_SPEED_CODE_10_HZ);
+    });
+
+    msg.dispatch("/threescan/strengthfilter", [](OSCMessage &msg) {
+        app.getSettings().setMinSignalStrength(static_cast<unsigned int>(msg.getFloat(0)));
+    });
+
+
     sendRefresh();
 }
 
 void sendRefresh() {
     // send infos
     osc.send("/threescan/sd/mounted", app.isSDMounted() ? 1.0f : 0.0f);
+    osc.send("/threescan/sd/writing", app.isWriting() ? 1.0f : 0.0f);
     osc.send("/threescan/scan/running", app.isScanning() ? 1.0f : 0.0f);
     osc.send("/threescan/scan/progress", app.getScanProgress());
     osc.send("/threescan/scan/progress/text", String(app.getScanProgress() * 100.0f, 0) + "%");
@@ -233,4 +284,29 @@ void sendRefresh() {
     osc.send("/threescan/startAngle", app.getSettings().getStartAngle());
     osc.send("/threescan/endAngle", app.getSettings().getEndAngle());
     osc.send("/threescan/angleStep/text", app.getSettings().getAngleStep());
+    osc.send("/threescan/sliceiteration/text", app.getSettings().getSliceIterationCount());
+    osc.send("/threescan/strengthfilter", app.getSettings().getMinSignalStrength());
+    osc.send("/threescan/scan/file/text", app.getPath());
+
+    // motor speed
+    if (app.getSettings().getMotorSpeed() == MOTOR_SPEED_CODE_1_HZ)
+        osc.send("/threescan/samplerate/text", "1 Hz");
+
+    if (app.getSettings().getMotorSpeed() == MOTOR_SPEED_CODE_5_HZ)
+        osc.send("/threescan/samplerate/text", "5 Hz");
+
+    if (app.getSettings().getMotorSpeed() == MOTOR_SPEED_CODE_10_HZ)
+        osc.send("/threescan/samplerate/text", "10 Hz");
+
+    // sample rate
+    if (app.getSettings().getSampleRate() == SAMPLE_RATE_CODE_500_HZ)
+        osc.send("/threescan/samplerate/text", "500 Hz");
+
+    if (app.getSettings().getSampleRate() == SAMPLE_RATE_CODE_750_HZ)
+        osc.send("/threescan/samplerate/text", "750 Hz");
+
+    if (app.getSettings().getSampleRate() == SAMPLE_RATE_CODE_1000_HZ)
+        osc.send("/threescan/samplerate/text", "1000 Hz");
+
+
 }

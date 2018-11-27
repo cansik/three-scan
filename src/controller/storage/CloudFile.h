@@ -24,7 +24,7 @@ protected:
 
     File file;
 
-    String path;
+    String path = "";
 
     SDCardStoragePtr storage;
 
@@ -56,6 +56,8 @@ public:
     void appendBuffer(MutableBuffer<Vertex> &vertices);
 
     void close();
+
+    const String &getPath() const;
 };
 
 
