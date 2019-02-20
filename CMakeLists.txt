@@ -4,51 +4,51 @@ project(three-scan)
 include(CMakeListsPrivate.txt)
 
 add_custom_target(
-        PLATFORMIO_BUILD ALL
-        COMMAND ${PLATFORMIO_CMD} -f -c clion run
-        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+    PLATFORMIO_BUILD ALL
+    COMMAND ${PLATFORMIO_CMD} -f -c clion run
+    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
 )
 
 add_custom_target(
-        PLATFORMIO_UPLOAD ALL
-        COMMAND ${PLATFORMIO_CMD} -f -c clion run --target upload
-        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+    PLATFORMIO_UPLOAD ALL
+    COMMAND ${PLATFORMIO_CMD} -f -c clion run --target upload
+    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
 )
 
 add_custom_target(
-        PLATFORMIO_CLEAN ALL
-        COMMAND ${PLATFORMIO_CMD} -f -c clion run --target clean
-        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+    PLATFORMIO_CLEAN ALL
+    COMMAND ${PLATFORMIO_CMD} -f -c clion run --target clean
+    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
 )
 
 add_custom_target(
-        PLATFORMIO_TEST ALL
-        COMMAND ${PLATFORMIO_CMD} -f -c clion test
-        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+    PLATFORMIO_TEST ALL
+    COMMAND ${PLATFORMIO_CMD} -f -c clion test
+    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
 )
 
 add_custom_target(
-        PLATFORMIO_PROGRAM ALL
-        COMMAND ${PLATFORMIO_CMD} -f -c clion run --target program
-        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+    PLATFORMIO_PROGRAM ALL
+    COMMAND ${PLATFORMIO_CMD} -f -c clion run --target program
+    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
 )
 
 add_custom_target(
-        PLATFORMIO_UPLOADFS ALL
-        COMMAND ${PLATFORMIO_CMD} -f -c clion run --target uploadfs
-        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+    PLATFORMIO_UPLOADFS ALL
+    COMMAND ${PLATFORMIO_CMD} -f -c clion run --target uploadfs
+    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
 )
 
 add_custom_target(
-        PLATFORMIO_UPDATE_ALL ALL
-        COMMAND ${PLATFORMIO_CMD} -f -c clion update
-        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+    PLATFORMIO_UPDATE_ALL ALL
+    COMMAND ${PLATFORMIO_CMD} -f -c clion update
+    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
 )
 
 add_custom_target(
-        PLATFORMIO_REBUILD_PROJECT_INDEX ALL
-        COMMAND ${PLATFORMIO_CMD} -f -c clion init --ide clion
-        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+    PLATFORMIO_REBUILD_PROJECT_INDEX ALL
+    COMMAND ${PLATFORMIO_CMD} -f -c clion init --ide clion
+    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
 )
 
-add_executable(${PROJECT_NAME} ${SRC_LIST} src/driver/sweep/SweepESP32.cpp src/driver/sweep/SweepESP32.h src/model/Vertex.cpp src/model/Vertex.h src/model/Vector3.h src/util/MutableBuffer.h src/controller/storage/PLYFile.cpp src/controller/storage/PLYFile.h src/controller/storage/CloudFile.cpp src/controller/storage/CloudFile.h src/util/ExponentialMovingAverage.cpp src/util/ExponentialMovingAverage.h src/controller/network/HeartBeat.cpp src/controller/network/HeartBeat.h src/model/ToggleValue.cpp src/model/ToggleValue.h)
+add_executable(${PROJECT_NAME} ${SRC_LIST})
