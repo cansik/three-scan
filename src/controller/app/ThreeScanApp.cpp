@@ -68,10 +68,12 @@ void ThreeScanApp::startScan() {
     watch.start();
 
     // create name and output file
-    storage->secureMount();
-    auto fileName = storage->getFreeFilePath("/scan", ".ply");
-    storage->unmount();
-    cloudFile->create(fileName);
+    if (!settings.isSerialTransfer()) {
+        storage->secureMount();
+        auto fileName = storage->getFreeFilePath("/scan", ".ply");
+        storage->unmount();
+        cloudFile->create(fileName);
+    }
 
     // clear buffer
     Serial.println("clearing buffer...");
@@ -108,9 +110,11 @@ void ThreeScanApp::endScan() {
     delay(1000);
 
     // store data
-    Serial.println("writing data...");
-    saveData();
-    Serial.println("done!");
+    if (!settings.isSerialTransfer()) {
+        Serial.println("writing data...");
+        saveData();
+        Serial.println("done!");
+    }
 
     StatusLed::turnOff();
 
@@ -152,13 +156,14 @@ void ThreeScanApp::runScan() {
                 } else {
                     Serial.printf("sync %2f - points: %d max: %d filtered: %d\n",
                                   currentAngle, fullPointCounter, maxPointCount, filteredPoints);
+                    Serial.printf("TST:SYN\n");
 
                     // update max point
                     maxPointCount = (maxPointCount < pointCounter) ? pointCounter : maxPointCount;
 
                     // check if buffer is still enough
                     int mpc = static_cast<int>(std::llround(maxPointCount * 1.2));
-                    if (buffer.getMaxSize() < buffer.length() + mpc) {
+                    if (buffer.getMaxSize() < buffer.length() + mpc && !settings.isSerialTransfer()) {
                         writing = true;
                         sweep->stopScanning();
                         delay(500);
@@ -204,12 +209,18 @@ void ThreeScanApp::runScan() {
         }
 
         // new package received
-        //Serial.printf("%d. (%2f°):\t%2f°\t%d cm\n", pointCounter, currentAngle, reading.getAngleDegrees(),
-        //reading.getDistanceCentimeters());
+        if (settings.isSerialTransfer()) {
+            auto v = new Vertex(reading.getAngleDegrees(), currentAngle, reading.getDistanceCentimeters(),
+                                reading.getSignalStrength());
+            auto spherical = v->getSphericalPosition();
 
-        // add data to buffer
-        buffer.add(new Vertex(reading.getAngleDegrees(), currentAngle, reading.getDistanceCentimeters(),
-                              reading.getSignalStrength()));
+            Serial.printf("TST:DAT:%2f:%2f:%2f\n", spherical.x, spherical.y, spherical.z);
+        } else {
+            // add data to buffer
+            buffer.add(new Vertex(reading.getAngleDegrees(), currentAngle, reading.getDistanceCentimeters(),
+                                  reading.getSignalStrength()));
+        }
+
         pointCounter++;
         fullPointCounter++;
     }

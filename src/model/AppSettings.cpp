@@ -71,3 +71,11 @@ unsigned int AppSettings::getMinSignalStrength() const {
 void AppSettings::setMinSignalStrength(unsigned int minSignalStrength) {
     AppSettings::minSignalStrength = minSignalStrength;
 }
+
+bool AppSettings::isSerialTransfer() const {
+    return serialTransfer;
+}
+
+void AppSettings::setSerialTransfer(bool serialTransfer) {
+    AppSettings::serialTransfer = serialTransfer;
+}

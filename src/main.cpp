@@ -236,6 +236,10 @@ void handleOsc(OSCMessage &msg) {
         app.getSettings().setSliceIterationCount(static_cast<unsigned int>(msg.getFloat(0)));
     });
 
+    msg.dispatch("/threescan/serialtransfer", [](OSCMessage &msg) {
+        app.getSettings().setSerialTransfer(msg.getFloat(0) > 0.5f);
+    });
+
     msg.dispatch("/threescan/samplerate", [](OSCMessage &msg) {
         int sampleRate = static_cast<int>(msg.getFloat(0));
 
@@ -289,6 +293,7 @@ void sendRefresh() {
     osc.send("/threescan/strengthfilter", app.getSettings().getMinSignalStrength());
     osc.send("/threescan/scan/file/text", app.getPath());
     osc.send("/threescan/scan/time/text", MathUtils::timeStampString(app.getElapsedTime()));
+    osc.send("/threescan/serialtransfer", app.getSettings().isSerialTransfer() ? 1.0f : 0.0f);
 
     // motor speed
     if (app.getSettings().getMotorSpeed()[1] == '1')

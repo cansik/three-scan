@@ -8,7 +8,7 @@
 #include <cstdint>
 #include <driver/sweep/Sweep.h>
 
-#define THREE_SCAN_SETTINGS_VERSION 1004
+#define THREE_SCAN_SETTINGS_VERSION 1005
 
 
 struct AppSettings {
@@ -27,6 +27,8 @@ private:
     unsigned int standFilterSize = 80;
 
     unsigned int minSignalStrength = 50;
+
+    bool serialTransfer = true;
 
     const unsigned char *motorSpeed = MOTOR_SPEED_CODE_1_HZ;
 
@@ -66,6 +68,10 @@ public:
     unsigned int getMinSignalStrength() const;
 
     void setMinSignalStrength(unsigned int minSignalStrength);
+
+    bool isSerialTransfer() const;
+
+    void setSerialTransfer(bool serialTransfer);
 };
 
 
