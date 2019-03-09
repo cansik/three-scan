@@ -210,11 +210,11 @@ void ThreeScanApp::runScan() {
 
         // new package received
         if (settings.isSerialTransfer()) {
-            auto v = new Vertex(reading.getAngleDegrees(), currentAngle, reading.getDistanceCentimeters(),
-                                reading.getSignalStrength());
-            auto spherical = v->getSphericalPosition();
+            auto v = Vertex(reading.getAngleDegrees(), currentAngle, reading.getDistanceCentimeters(),
+                            reading.getSignalStrength());
+            auto spherical = v.getSphericalPosition();
 
-            Serial.printf("TST:DAT:%2f:%2f:%2f\n", spherical.x, spherical.y, spherical.z);
+            Serial.printf("TST:DAT:%6f:%6f:%6f\n", spherical.x, spherical.y, spherical.z);
         } else {
             // add data to buffer
             buffer.add(new Vertex(reading.getAngleDegrees(), currentAngle, reading.getDistanceCentimeters(),
