@@ -5,6 +5,7 @@ class PointCloudMCU extends MicroControllerUnit implements Runnable
   Thread thread;
 
   ArrayList<Vertex> vbo;
+  ArrayList<SphereVertex> sphereVBO;
 
   volatile int syncedPosition = 0;
   volatile boolean ended = false;
@@ -19,6 +20,7 @@ class PointCloudMCU extends MicroControllerUnit implements Runnable
     running = true;
     ended = false;
     vbo = new ArrayList<Vertex>();
+    sphereVBO = new ArrayList<SphereVertex>();
 
     thread = new Thread(this);
     thread.setDaemon(true);
@@ -92,7 +94,17 @@ class PointCloudMCU extends MicroControllerUnit implements Runnable
         int signalStrength = parseInt(data[5].trim());
 
         vbo.add(new Vertex(new PVector(x, y, z), signalStrength));
-        println("datapoint: " + x + " / " + y + " / " + z + " | " + signalStrength);
+      }
+
+      if (cmd.equals("ANG")) {
+        float azimuthalAngle = parseFloat(data[2].trim());
+        float polarAngle = parseFloat(data[3].trim());
+        int r = parseInt(data[4].trim());
+        int signalStrength = parseInt(data[5].trim());
+
+        sphereVBO.add(new SphereVertex(azimuthalAngle, polarAngle, r, signalStrength));
+  
+        println("ANG: az: " + azimuthalAngle + " pol: " + polarAngle + " r: " + r + " s: " + signalStrength);
       }
 
       if (cmd.equals("END")) {

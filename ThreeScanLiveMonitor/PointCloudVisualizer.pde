@@ -4,7 +4,7 @@ class PointCloudVisualizer
   PShader pointShader;
 
   // settings
-  float colorMix = 1.0f;
+  float colorMix = 0.0f;
   color backgroundColor = color(12);
 
   public PointCloudVisualizer(PApplet parent)

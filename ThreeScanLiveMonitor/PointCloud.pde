@@ -22,7 +22,7 @@ class PointCloud
   {
     if (currentIndex < vertices.getVertexCount())
     {
-      vertices.setVertex(currentIndex, v.position);
+      vertices.setVertex(currentIndex, v.position.x, v.position.y, v.position.z);
       currentIndex++;
     }
   }
@@ -51,7 +51,10 @@ class PointCloud
     {
       Vertex v = data.get(i);
       vertices.strokeWeight(1.0f);
+
+      vertices.fill(color(v.signalStrength, 100, 255));
       vertices.stroke(color(v.signalStrength, 100, 255));
+
       vertices.vertex(v.position.x, v.position.y, v.position.z);
     }
 

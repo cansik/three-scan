@@ -22,12 +22,10 @@ void setup()
 {
   frameRate(60);
   size(800, 600, P3D);
+  pixelDensity(2);
   surface.setTitle("Three Scan Live Monitor");
 
-  cam = new PeasyCam(this, -20, 200, 0, 800);
-  cam.rotateX(radians(-75));
-
-  randomSeed(7148);
+  cam = new PeasyCam(this, 0, 0, 0, 400);
 
   // setup renderer
   visusalizer = new PointCloudVisualizer(this);
