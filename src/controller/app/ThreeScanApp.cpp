@@ -114,6 +114,8 @@ void ThreeScanApp::endScan() {
         Serial.println("writing data...");
         saveData();
         Serial.println("done!");
+    } else {
+        Serial.printf("TST:END\n");
     }
 
     StatusLed::turnOff();
@@ -214,7 +216,7 @@ void ThreeScanApp::runScan() {
                             reading.getSignalStrength());
             auto spherical = v.getSphericalPosition();
 
-            Serial.printf("TST:DAT:%6f:%6f:%6f\n", spherical.x, spherical.y, spherical.z);
+            Serial.printf("TST:DAT:%6f:%6f:%6f:%d\n", spherical.x, spherical.y, spherical.z, v.getSignalStrength());
         } else {
             // add data to buffer
             buffer.add(new Vertex(reading.getAngleDegrees(), currentAngle, reading.getDistanceCentimeters(),
