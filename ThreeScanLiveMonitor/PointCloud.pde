@@ -15,7 +15,7 @@ class PointCloud
 
   public PointCloud()
   {
-    initVertexArray(50 * 1000);
+    initVertexArray(100 * 1000);
   }
 
   public void setNextVertex(Vertex v)

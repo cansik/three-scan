@@ -217,11 +217,14 @@ void ThreeScanApp::runScan() {
             auto spherical = v.getSphericalPosition();
 
             Serial.printf("TST:DAT:%6f:%6f:%6f:%d\n", spherical.x, spherical.y, spherical.z, v.getSignalStrength());
+
+            /*
             Serial.printf("TST:ANG:%6f:%6f:%d:%d\n",
                           reading.getAngleDegrees(),
                           currentAngle,
                           reading.getDistanceCentimeters(),
                           reading.getSignalStrength());
+            */
         } else {
             // add data to buffer
             buffer.add(new Vertex(reading.getAngleDegrees(), currentAngle, reading.getDistanceCentimeters(),
@@ -232,8 +235,12 @@ void ThreeScanApp::runScan() {
         fullPointCounter++;
     }
 
-    // check end condition
-    if (currentAngle > settings.getEndAngle()) {
+// check end condition
+    if (currentAngle > settings.
+
+            getEndAngle()
+
+            ) {
         endScan();
     }
 

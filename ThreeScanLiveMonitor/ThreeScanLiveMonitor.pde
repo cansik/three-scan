@@ -93,7 +93,10 @@ void showInfo()
   cam.beginHUD();
   fill(255);
   textSize(14);
-  text("MCU detected: " + isMcuAvailable + "\nattached: " + (mcu.isAttached()) + "\nFPS: " + round(frameRate), 20, 20);
+  text("MCU detected: " + isMcuAvailable 
+    + "\nattached: " + (mcu.isAttached()) 
+    + "\npoints: " + (cloud.currentIndex) 
+    + "\nFPS: " + round(frameRate), 20, 20);
   cam.endHUD();
 }
 

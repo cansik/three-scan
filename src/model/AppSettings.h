@@ -20,9 +20,9 @@ private:
 
     float endAngle = 180.0f;
 
-    float angleStep = 1.0f;
+    float angleStep = 0.25f;
 
-    unsigned int sliceIterationCount = 1;
+    unsigned int sliceIterationCount = 2;
 
     unsigned int standFilterSize = 80;
 
@@ -30,7 +30,7 @@ private:
 
     bool serialTransfer = true;
 
-    const unsigned char *motorSpeed = MOTOR_SPEED_CODE_1_HZ;
+    const unsigned char *motorSpeed = MOTOR_SPEED_CODE_5_HZ;
 
     const unsigned char *sampleRate = SAMPLE_RATE_CODE_1000_HZ;
 

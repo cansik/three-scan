@@ -103,7 +103,7 @@ class PointCloudMCU extends MicroControllerUnit implements Runnable
         int signalStrength = parseInt(data[5].trim());
 
         sphereVBO.add(new SphereVertex(azimuthalAngle, polarAngle, r, signalStrength));
-  
+
         println("ANG: az: " + azimuthalAngle + " pol: " + polarAngle + " r: " + r + " s: " + signalStrength);
       }
 
