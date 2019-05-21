@@ -1,6 +1,19 @@
 # 3Scan
 3Scan is a three dimensional LIDAR scanner.
 
+## Serial Commands
+
+All commands have to be send via serial and terminated with a `\n`.
+
+```bash
+// list settings
+CMD:LST
+
+// update serial transfer
+CMD:SET:ST:1
+CMD:SET:ST:0
+```
+
 ## Hardware
 Based on ESP32 and Sweep Scanse LIDAR.
 

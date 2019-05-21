@@ -10,6 +10,7 @@
 #include <driver/sweep/SweepESP32.h>
 #include <driver/motor/PreciseServo.h>
 #include <controller/network/HeartBeat.h>
+#include <controller/interaction/SerialRemoteControl.h>
 
 #include "controller/BaseController.h"
 #include "controller/app/ThreeScanApp.h"
@@ -66,12 +67,14 @@ auto servo = PreciseServo(SERVO_PIN);
 auto heartBeatTimer = Timer(1000);
 
 auto app = ThreeScanApp(&sdCardStorage, &sweep, &servo);
+auto remoteControl = SerialRemoteControl(&app);
 
 // controller list
 BaseControllerPtr controllers[] = {
         &network,
         &ota,
-        &osc
+        &osc,
+        &remoteControl,
 };
 
 // scan controller list
