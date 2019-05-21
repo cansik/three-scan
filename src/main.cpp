@@ -11,6 +11,7 @@
 #include <driver/motor/PreciseServo.h>
 #include <controller/network/HeartBeat.h>
 #include <controller/interaction/SerialRemoteControl.h>
+#include <model/ScanState.h>
 
 #include "controller/BaseController.h"
 #include "controller/app/ThreeScanApp.h"
@@ -47,10 +48,8 @@
 #define OSC_IN_PORT 8000
 
 bool debugButtonState = false;
-volatile bool scanLoopRunning = true;
 
-volatile bool requestStartScan = false;
-volatile bool requestStopScan = false;
+auto scanState = ScanState();
 
 // typedefs
 typedef BaseController *BaseControllerPtr;
@@ -67,7 +66,7 @@ auto servo = PreciseServo(SERVO_PIN);
 auto heartBeatTimer = Timer(1000);
 
 auto app = ThreeScanApp(&sdCardStorage, &sweep, &servo);
-auto remoteControl = SerialRemoteControl(&app);
+auto remoteControl = SerialRemoteControl(&app, &scanState);
 
 // controller list
 BaseControllerPtr controllers[] = {
@@ -155,17 +154,17 @@ void loop() {
 }
 
 void scanLoop(void *parameter) {
-    while (scanLoopRunning) {
+    while (scanState.scanLoopRunning) {
 
         // start
-        if (requestStartScan) {
-            requestStartScan = false;
+        if (scanState.requestStartScan) {
+            scanState.requestStartScan = false;
             app.startScan();
         }
 
         // stop
-        if (requestStopScan) {
-            requestStopScan = false;
+        if (scanState.requestStopScan) {
+            scanState.requestStopScan = false;
             app.endScan();
         }
 
@@ -185,7 +184,7 @@ void checkDebugButton() {
 
         Serial.println("debug button pressed!");
         if (!app.isScanning())
-            requestStartScan = true;
+            scanState.requestStartScan = true;
     }
 
     if (!state && debugButtonState) {
@@ -198,12 +197,12 @@ void handleOsc(OSCMessage &msg) {
     // global
     msg.dispatch("/threescan/start", [](OSCMessage &msg) {
         if (!app.isScanning())
-            requestStartScan = true;
+            scanState.requestStartScan = true;
     });
 
     msg.dispatch("/threescan/stop", [](OSCMessage &msg) {
         if (app.isScanning())
-            requestStopScan = true;
+            scanState.requestStopScan = true;
     });
 
     msg.dispatch("/threescan/save", [](OSCMessage &msg) {

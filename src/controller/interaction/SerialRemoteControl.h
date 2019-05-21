@@ -8,11 +8,14 @@
 
 #include <controller/BaseController.h>
 #include <controller/app/ThreeScanApp.h>
+#include <model/ScanState.h>
 
 class SerialRemoteControl : public BaseController {
 
 private:
     ThreeScanApp *app;
+
+    ScanState *scanState;
 
     Timer timer = Timer(1000 / 20);
 
@@ -25,7 +28,7 @@ private:
     void updateSetting(const String &input);
 
 public:
-    explicit SerialRemoteControl(ThreeScanApp *app);
+    explicit SerialRemoteControl(ThreeScanApp *app, ScanState *scanState);
 
     void setup() override;
 

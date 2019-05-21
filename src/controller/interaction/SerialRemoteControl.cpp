@@ -4,8 +4,9 @@
 
 #include "SerialRemoteControl.h"
 
-SerialRemoteControl::SerialRemoteControl(ThreeScanApp *app) {
+SerialRemoteControl::SerialRemoteControl(ThreeScanApp *app, ScanState *scanState) {
     this->app = app;
+    this->scanState = scanState;
 }
 
 void SerialRemoteControl::setup() {
@@ -42,6 +43,16 @@ void SerialRemoteControl::parseCommands(const String &input) {
         sscanf(input.c_str(), "DAT:ACC;%d;%d;%d", &x, &y, &z);
     }
      */
+
+    // start scan
+    if (input.startsWith("CMD:START")) {
+        scanState->requestStartScan = true;
+    }
+
+    // stop scan
+    if (input.startsWith("CMD:STOP")) {
+        scanState->requestStopScan = true;
+    }
 
     // list settings
     if (input.startsWith("CMD:LST")) {
