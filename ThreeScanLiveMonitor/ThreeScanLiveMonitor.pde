@@ -104,6 +104,14 @@ void keyPressed()
 {
   if (key == ' ')
   {
+    mcu.writeCommand("CMD:SET:ST:1");
+    delay(100);
+    mcu.writeCommand("CMD:START");
+  }
+
+
+  if (key == 'c')
+  {
     // try to connect
     if (isMcuAvailable)
       mcu.attach();

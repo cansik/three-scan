@@ -29,10 +29,14 @@ class MicroControllerUnit
       println("Serial Error: " + ex.getMessage());
     }
   }
+  
+  public void writeCommand(String data) {
+     port.write(data + "\n");
+  }
 
   public String readData()
   {
-    if ( port.available() > 0) 
+    if (port.available() > 0) 
       return port.readStringUntil('\n');
     return null;
   }
