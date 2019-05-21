@@ -93,7 +93,7 @@ void ThreeScanApp::startScan() {
     Serial.printf("current sample rate: %d\n", sweep->getSampleRate());
 
     // move servo to start position
-    servo->movePrecise(currentAngle, true);
+    servo->movePreciseAndSlow(currentAngle);
     delay(500);
 
     Serial.println("start scanning");
@@ -103,6 +103,7 @@ void ThreeScanApp::startScan() {
 
 void ThreeScanApp::endScan() {
     sweep->stopScanning();
+    // todo: move slower
     servo->reset();
     sweep->close();
     Serial.println("finished scanning!");

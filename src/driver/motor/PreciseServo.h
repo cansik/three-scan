@@ -32,6 +32,8 @@ public:
 
     void movePrecise(float angle, bool delayForServo = false);
 
+    void movePreciseAndSlow(float angle, int waitTimePerFullAngle = 10);
+
     void movePulse(uint16_t pulseWidth);
 };
 

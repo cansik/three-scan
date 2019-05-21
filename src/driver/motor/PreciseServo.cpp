@@ -41,7 +41,23 @@ void PreciseServo::movePrecise(float angle, bool delayForServo) {
                 static_cast<float>(deltaPulse) / (SERVO_MAX_PULSE - SERVO_MIN_PULSE) * 180.0f,
                 0.0f, 180.0f);
         auto millisToWait = std::lround(servoSpeedPerDegree * deltaDegree * 1000);
-        
+
         delay(static_cast<uint32_t>(millisToWait));
     }
+}
+
+void PreciseServo::movePreciseAndSlow(float angle, int waitTimePerFullAngle) {
+    auto targetPulse = static_cast<uint16_t>(MathUtils::map(angle, 0.0f, 180.0f, SERVO_MIN_PULSE, SERVO_MAX_PULSE));
+    int sign = targetPulse - currentPulse > 0.0f ? 1 : -1;
+    auto stepPulse = static_cast<uint16_t>(MathUtils::map(1.0f, 0.0f, 180.0f, SERVO_MIN_PULSE, SERVO_MAX_PULSE) -
+                                           SERVO_MIN_PULSE) * sign;
+
+    // move slow
+    while (abs(targetPulse - currentPulse) > 1.0f) {
+        movePulse(currentPulse + stepPulse);
+        delay(waitTimePerFullAngle);
+    }
+
+    // move to correct position
+    movePrecise(angle, false);
 }

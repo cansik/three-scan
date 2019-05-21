@@ -107,6 +107,12 @@ void keyPressed()
     mcu.writeCommand("CMD:SET:ST:1");
     delay(100);
     mcu.writeCommand("CMD:START");
+    mcu.ended = false;
+  }
+
+  if (key == 's') {
+    mcu.ended = true;
+    mcu.writeCommand("CMD:STOP");
   }
 
 

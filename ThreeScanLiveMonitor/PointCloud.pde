@@ -8,7 +8,7 @@ class PointCloud
   float scale = 1.0f;
   PVector translation = new PVector();
 
-  float pointScale = 1f;
+  float pointScale = 2f;
   color pointColor = color(255, 255, 255);
 
   int currentIndex = 0;
