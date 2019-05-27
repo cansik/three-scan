@@ -15,6 +15,8 @@ PeasyCam cam;
 
 boolean debug = true;
 
+ScreenPrinter printer;
+
 PointCloudVisualizer visusalizer;
 PointCloud cloud;
 
@@ -26,6 +28,9 @@ void setup()
   surface.setTitle("Three Scan Live Monitor");
 
   cam = new PeasyCam(this, 0, 0, 0, 400);
+
+  // setup printer
+  printer = new ScreenPrinter(20);
 
   // setup renderer
   visusalizer = new PointCloudVisualizer(this);
@@ -64,6 +69,15 @@ void draw()
     cloud.createCloud(mcu.vbo);
 
     println("cloud recreated!");
+  }
+
+  if (debug) {
+    cam.beginHUD();
+    push();
+    translate(20, 200);
+    printer.render(this.g);
+    pop();
+    cam.endHUD();
   }
 
   showInfo();
@@ -115,6 +129,9 @@ void keyPressed()
     mcu.writeCommand("CMD:STOP");
   }
 
+  if (key == 'd') {
+    debug = !debug;
+  }
 
   if (key == 'c')
   {

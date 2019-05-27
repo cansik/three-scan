@@ -67,6 +67,7 @@ class PointCloudMCU extends MicroControllerUnit implements Runnable
     if (debug && raw != null && !raw.startsWith("TST") && !raw.trim().equals(""))
     {
       println("MCU: " + raw.trim());
+      printer.add(raw.trim());
     }
 
     if (raw == null || !raw.startsWith("TST"))
