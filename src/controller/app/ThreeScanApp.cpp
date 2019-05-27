@@ -138,8 +138,8 @@ void ThreeScanApp::runScan() {
     if (syncTimeoutTimer.elapsed()) {
         Serial.println("no sync received, try to start sweep again!");
         sweep->stopScanning();
-        delay(500);
         sweep->startScanning();
+        delay(100);
     }
 
     // check if scan is ready
@@ -194,6 +194,10 @@ void ThreeScanApp::runScan() {
             } else {
                 waitForSync = true;
                 sweep->stopScanning();
+                while (sweep->isScanning()) {
+                    delay(100);
+                    Serial.println("still scanning...");
+                }
                 sweep->startScanning();
             }
         }
@@ -218,14 +222,6 @@ void ThreeScanApp::runScan() {
             auto spherical = v.getSphericalPosition();
 
             Serial.printf("TST:DAT:%6f:%6f:%6f:%d\n", spherical.x, spherical.y, spherical.z, v.getSignalStrength());
-
-            /*
-            Serial.printf("TST:ANG:%6f:%6f:%d:%d\n",
-                          reading.getAngleDegrees(),
-                          currentAngle,
-                          reading.getDistanceCentimeters(),
-                          reading.getSignalStrength());
-            */
         } else {
             // add data to buffer
             buffer.add(new Vertex(reading.getAngleDegrees(), currentAngle, reading.getDistanceCentimeters(),
@@ -236,12 +232,8 @@ void ThreeScanApp::runScan() {
         fullPointCounter++;
     }
 
-// check end condition
-    if (currentAngle > settings.
-
-            getEndAngle()
-
-            ) {
+    // check end condition
+    if (currentAngle > settings.getEndAngle()) {
         endScan();
     }
 

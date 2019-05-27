@@ -20,6 +20,9 @@
 #include "controller/network/OscController.h"
 #include "util/MathUtils.h"
 
+#include "soc/timer_group_struct.h"
+#include "soc/timer_group_reg.h"
+
 // global
 #define SD_SELECT_PIN 12
 
@@ -155,6 +158,10 @@ void loop() {
 
 void scanLoop(void *parameter) {
     while (scanState.scanLoopRunning) {
+        // disable watchdog
+        TIMERG0.wdt_wprotect = TIMG_WDT_WKEY_VALUE;
+        TIMERG0.wdt_feed = 1;
+        TIMERG0.wdt_wprotect = 0;
 
         // start
         if (scanState.requestStartScan) {
