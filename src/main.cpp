@@ -26,21 +26,23 @@
 // global
 
 // sd
-#define SD_CONTROL_POWER_PIN 15
-#define SD_CS_PIN 12
-#define SD_SCK_PIN 12
-#define SD_MOSI_PIN 12
-#define SD_MISO_PIN 12
+#define SD_CONTROL_POWER_PIN 33
+#define SD_CS_PIN 21
+#define SD_SCK_PIN 18
+#define SD_MOSI_PIN 23
+#define SD_MISO_PIN 19
 
 // servo
-#define SERVO_PIN 4
+#define SERVO_PIN 2
 
 // lidar
+#define SWEEP_CONTROL_POWER_PIN 32
 #define SWEEP_RX 27
 #define SWEEP_TX 26
-#define SWEEP_CONTROL_POWER_PIN 15
 
-#define DEBUG_BTN_PIN 14
+// ui
+#define BTN_PIN 22
+#define STATUS_LED_PIN 25
 
 // serial
 #define BAUD_RATE 115200
@@ -104,10 +106,10 @@ void setup() {
     Serial.begin(BAUD_RATE);
 
     // setup debug btn
-    pinMode(DEBUG_BTN_PIN, INPUT_PULLDOWN);
+    pinMode(BTN_PIN, INPUT_PULLDOWN);
 
     // setup status led
-    StatusLed::setup();
+    StatusLed::setup(STATUS_LED_PIN);
 
     // wait some seconds for debugging
     if (Serial)
@@ -190,7 +192,7 @@ void scanLoop(void *parameter) {
 }
 
 void checkDebugButton() {
-    auto state = digitalRead(DEBUG_BTN_PIN);
+    auto state = digitalRead(BTN_PIN);
 
     if (state && !debugButtonState) {
         // turns on
