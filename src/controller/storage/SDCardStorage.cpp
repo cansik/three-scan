@@ -74,6 +74,7 @@ void SDCardStorage::writeString(const String &path, const String &content, bool 
 
 void SDCardStorage::mount() {
     // turn on sd card
+    turnPowerOn();
 
     SPI.begin(sckPin, misoPin, mosiPin, csPin);
     if (!SD.begin(csPin)) {
@@ -89,6 +90,7 @@ void SDCardStorage::mount() {
 void SDCardStorage::unmount() {
     SD.end();
     connected = false;
+    turnPowerOff();
     StatusLed::turnOff();
 }
 
