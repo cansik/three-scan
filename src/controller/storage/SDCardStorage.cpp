@@ -7,7 +7,8 @@
 #include <util/StatusLed.h>
 #include "SDCardStorage.h"
 
-SDCardStorage::SDCardStorage(uint8_t csPin, uint8_t misoPin, uint8_t mosiPin, uint8_t sckPin) {
+SDCardStorage::SDCardStorage(uint8_t controlPowerPin, uint8_t csPin, uint8_t misoPin, uint8_t mosiPin, uint8_t sckPin) {
+    this->controlPowerPin = controlPowerPin;
     this->csPin = csPin;
     this->misoPin = misoPin;
     this->mosiPin = mosiPin;
@@ -72,6 +73,8 @@ void SDCardStorage::writeString(const String &path, const String &content, bool 
 }
 
 void SDCardStorage::mount() {
+    // turn on sd card
+
     SPI.begin(sckPin, misoPin, mosiPin, csPin);
     if (!SD.begin(csPin)) {
         Serial.println("Card Mount Failed");
@@ -130,4 +133,13 @@ void SDCardStorage::secureMount(unsigned int delayTime) {
         delay(250);
         mountTries++;
     }
+}
+
+void SDCardStorage::turnPowerOff() {
+    digitalWrite(controlPowerPin, LOW);
+}
+
+void SDCardStorage::turnPowerOn() {
+    digitalWrite(controlPowerPin, HIGH);
+    delay(50);
 }

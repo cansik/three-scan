@@ -6,12 +6,11 @@
 
 HardwareSerial SweepSerial(1);
 
-SweepESP32::SweepESP32(uint8_t rxPin, uint8_t txPin, uint8_t pwrPin1, uint8_t pwrPin2) : Sweep(SweepSerial) {
+SweepESP32::SweepESP32(uint8_t rxPin, uint8_t txPin, uint8_t controlPowerPin) : Sweep(SweepSerial) {
     this->rxPin = rxPin;
     this->txPin = txPin;
 
-    this->pwrPin1 = pwrPin1;
-    this->pwrPin2 = pwrPin2;
+    this->controlPowerPin = controlPowerPin;
 }
 
 void SweepESP32::open() {
@@ -29,13 +28,12 @@ void SweepESP32::close() {
 }
 
 void SweepESP32::turnPowerOn() {
-    digitalWrite(pwrPin1, HIGH);
-    digitalWrite(pwrPin2, HIGH);
+    digitalWrite(controlPowerPin, HIGH);
+    delay(50);
 }
 
 void SweepESP32::turnPowerOff() {
-    digitalWrite(pwrPin1, LOW);
-    digitalWrite(pwrPin2, LOW);
+    digitalWrite(controlPowerPin, LOW);
 }
 
 void SweepESP32::hardReset() {
@@ -45,8 +43,7 @@ void SweepESP32::hardReset() {
 }
 
 void SweepESP32::setup() {
-    pinMode(pwrPin1, OUTPUT);
-    pinMode(pwrPin2, OUTPUT);
+    pinMode(controlPowerPin, OUTPUT);
 
     pinMode(rxPin, INPUT_PULLUP);
     pinMode(txPin, INPUT_PULLUP);

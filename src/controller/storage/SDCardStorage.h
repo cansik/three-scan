@@ -16,12 +16,18 @@ private:
     uint8_t mosiPin;
     uint8_t sckPin;
     uint8_t csPin;
+    uint8_t controlPowerPin;
 
     boolean connected = false;
 
+    void turnPowerOn();
+
+    void turnPowerOff();
+
 
 public:
-    explicit SDCardStorage(uint8_t csPin, uint8_t misoPin = 19, uint8_t mosiPin = 23, uint8_t sckPin = 18);
+    explicit SDCardStorage(uint8_t controlPowerPin, uint8_t csPin, uint8_t misoPin = 19, uint8_t mosiPin = 23,
+                           uint8_t sckPin = 18);
 
     void setup();
 

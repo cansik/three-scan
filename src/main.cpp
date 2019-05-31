@@ -24,14 +24,21 @@
 #include "soc/timer_group_reg.h"
 
 // global
-#define SD_SELECT_PIN 12
 
+// sd
+#define SD_CONTROL_POWER_PIN 15
+#define SD_CS_PIN 12
+#define SD_SCK_PIN 12
+#define SD_MOSI_PIN 12
+#define SD_MISO_PIN 12
+
+// servo
 #define SERVO_PIN 4
 
+// lidar
 #define SWEEP_RX 27
 #define SWEEP_TX 26
-#define PWR_PIN_1 15
-#define PWR_PIN_2 5
+#define SWEEP_CONTROL_POWER_PIN 15
 
 #define DEBUG_BTN_PIN 14
 
@@ -63,8 +70,8 @@ auto ota = OTAController(DEVICE_NAME, OTA_PASSWORD, OTA_PORT);
 auto osc = OscController(OSC_IN_PORT, OSC_OUT_PORT);
 
 // variables
-auto sdCardStorage = SDCardStorage(SD_SELECT_PIN);
-auto sweep = SweepESP32(SWEEP_RX, SWEEP_TX, PWR_PIN_1, PWR_PIN_2);
+auto sdCardStorage = SDCardStorage(SD_CONTROL_POWER_PIN, SD_CS_PIN, SD_MOSI_PIN, SD_MISO_PIN, SD_SCK_PIN);
+auto sweep = SweepESP32(SWEEP_RX, SWEEP_TX, SWEEP_CONTROL_POWER_PIN);
 auto servo = PreciseServo(SERVO_PIN);
 auto heartBeatTimer = Timer(1000);
 
