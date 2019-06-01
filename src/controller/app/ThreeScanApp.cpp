@@ -194,10 +194,6 @@ void ThreeScanApp::runScan() {
             } else {
                 waitForSync = true;
                 sweep->stopScanning();
-                while (sweep->isScanning()) {
-                    delay(100);
-                    Serial.println("still scanning...");
-                }
                 sweep->startScanning();
             }
         }
