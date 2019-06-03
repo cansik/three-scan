@@ -2,6 +2,7 @@
 // Created by Florian Bruggisser on 2019-05-21.
 //
 
+#include <util/ESPUtils.h>
 #include "SerialRemoteControl.h"
 
 SerialRemoteControl::SerialRemoteControl(ThreeScanApp *app, ScanState *scanState) {
@@ -43,6 +44,11 @@ void SerialRemoteControl::parseCommands(const String &input) {
         sscanf(input.c_str(), "DAT:ACC;%d;%d;%d", &x, &y, &z);
     }
      */
+
+    // restart device
+    if (input.startsWith("CMD:RESTART")) {
+        ESPUtils::hardRestart();
+    }
 
     // start scan
     if (input.startsWith("CMD:START")) {

@@ -122,7 +122,7 @@ void ThreeScanApp::endScan() {
     StatusLed::turnOff();
 
     watch.stop();
-    Serial.printf("Scan Took: %lu ms", watch.elapsed());
+    Serial.printf("Scan Took: %lu ms\n", watch.elapsed());
 
     scanning = false;
 }

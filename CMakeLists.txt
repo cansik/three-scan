@@ -51,4 +51,4 @@ add_custom_target(
         WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
 )
 
-add_executable(${PROJECT_NAME} ${SRC_LIST} src/controller/interaction/SerialRemoteControl.cpp src/controller/interaction/SerialRemoteControl.h src/model/ScanState.cpp src/model/ScanState.h)
+add_executable(${PROJECT_NAME} ${SRC_LIST} src/controller/interaction/SerialRemoteControl.cpp src/controller/interaction/SerialRemoteControl.h src/model/ScanState.cpp src/model/ScanState.h src/util/ESPUtils.cpp src/util/ESPUtils.h)

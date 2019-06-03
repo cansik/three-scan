@@ -332,6 +332,4 @@ void sendRefresh() {
 
     if (app.getSettings().getSampleRate()[1] == '3')
         osc.send("/threescan/samplerate/text", "1000 Hz");
-
-
 }
