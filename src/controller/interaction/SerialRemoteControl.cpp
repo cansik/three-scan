@@ -47,6 +47,7 @@ void SerialRemoteControl::parseCommands(const String &input) {
 
     // restart device
     if (input.startsWith("CMD:RESTART")) {
+        Serial.println("restarting...");
         ESPUtils::hardRestart();
     }
 

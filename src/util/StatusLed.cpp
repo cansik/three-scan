@@ -9,7 +9,11 @@ uint8_t StatusLed::ledPin;
 
 bool StatusLed::blinking;
 
+bool StatusLed::isOn;
+
 uint8_t StatusLed::brightness;
+
+Timer StatusLed::blinkTimer = Timer(1000);
 
 void StatusLed::setup(uint8_t ledPin) {
     StatusLed::ledPin = ledPin;
@@ -19,15 +23,23 @@ void StatusLed::setup(uint8_t ledPin) {
 }
 
 void StatusLed::loop() {
-
+    if (blinking && blinkTimer.elapsed()) {
+        if (isOn) {
+            turnOff();
+        } else {
+            turnOn();
+        }
+    }
 }
 
 void StatusLed::turnOn() {
     setBrightness(255);
+    isOn = true;
 }
 
 void StatusLed::turnOff() {
     setBrightness(0);
+    isOn = false;
 }
 
 void StatusLed::setBrightness(uint8_t brightness) {
@@ -38,16 +50,15 @@ void StatusLed::setBrightness(uint8_t brightness) {
     } else {
         digitalWrite(ledPin, LOW);
     }
-
-    //ledcAnalogWrite(StatusLed::ledPin, StatusLed::brightness);
 }
 
-void StatusLed::ledcAnalogWrite(uint8_t channel, uint32_t value, uint32_t valueMax) {
-    auto v = (value > valueMax) ? valueMax : value;
+void StatusLed::blink(unsigned long rate) {
+    blinking = true;
+    blinkTimer.setWaitTime(rate);
+    blinkTimer.reset();
+}
 
-    // calculate duty, 8191 from 2 ^ 13 - 1
-    uint32_t duty = (8191 / valueMax) * v;
-
-    // write duty to LEDC
-    ledcWrite(channel, duty);
+void StatusLed::noBlink() {
+    blinking = false;
+    turnOff();
 }

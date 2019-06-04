@@ -19,6 +19,8 @@ ThreeScanApp::ThreeScanApp(StoragePtr storage, SweepESP32Ptr sweep, PreciseServo
 void ThreeScanApp::setup() {
     BaseController::setup();
 
+    StatusLed::blink(300);
+
     // setup servo
     Serial.println("setting up servo...");
     servo->setup();
@@ -42,6 +44,7 @@ void ThreeScanApp::setup() {
 
     // setting up data file
     cloudFile = new CloudFile(storage);
+    StatusLed::noBlink();
 }
 
 void ThreeScanApp::loop() {
@@ -52,6 +55,7 @@ void ThreeScanApp::loop() {
 }
 
 void ThreeScanApp::startScan() {
+    StatusLed::blink(100);
     scanning = true;
     waitForSync = true;
     currentAngle = settings.getStartAngle();
@@ -99,9 +103,11 @@ void ThreeScanApp::startScan() {
     Serial.println("start scanning");
     sweep->startScanning();
     syncTimeoutTimer.reset();
+    StatusLed::blink(500);
 }
 
 void ThreeScanApp::endScan() {
+    StatusLed::blink(100);
     sweep->stopScanning();
     // todo: move slower
     servo->reset();
@@ -119,12 +125,12 @@ void ThreeScanApp::endScan() {
         Serial.printf("TST:END\n");
     }
 
-    StatusLed::turnOff();
-
     watch.stop();
     Serial.printf("Scan Took: %lu ms\n", watch.elapsed());
 
     scanning = false;
+    StatusLed::noBlink();
+    StatusLed::turnOn();
 }
 
 void ThreeScanApp::runScan() {
@@ -192,9 +198,11 @@ void ThreeScanApp::runScan() {
 
                 pointCounter = 0;
             } else {
+                StatusLed::blink(50);
                 waitForSync = true;
                 sweep->stopScanning();
                 sweep->startScanning();
+                StatusLed::blink(500);
             }
         }
 

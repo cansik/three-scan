@@ -103,17 +103,18 @@ void checkDebugButton();
 void scanLoop(void *parameter);
 
 void setup() {
+    // setup status led
+    StatusLed::setup(STATUS_LED_PIN);
+    StatusLed::turnOn();
+
     Serial.begin(BAUD_RATE);
 
     // setup debug btn
     pinMode(BTN_PIN, INPUT_PULLDOWN);
 
-    // setup status led
-    StatusLed::setup(STATUS_LED_PIN);
-
     // wait some seconds for debugging
     if (Serial)
-        delay(5000);
+        delay(1000);
 
     StatusLed::turnOff();
 
@@ -150,6 +151,8 @@ void setup() {
 
     Serial.println("setup finished!");
     sendRefresh();
+
+    StatusLed::turnOn();
 }
 
 void loop() {
@@ -159,6 +162,9 @@ void loop() {
 
         // btn
         checkDebugButton();
+
+        // status led
+        StatusLed::loop();
 
         if (heartBeatTimer.elapsed())
             sendRefresh();

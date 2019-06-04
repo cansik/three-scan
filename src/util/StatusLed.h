@@ -7,6 +7,7 @@
 
 
 #include <cstdint>
+#include "Timer.h"
 
 class StatusLed {
 private:
@@ -14,7 +15,11 @@ private:
 
     static bool blinking;
 
+    static bool isOn;
+
     static uint8_t brightness;
+
+    static Timer blinkTimer;
 
 public:
     static void setup(uint8_t ledPin = 2);
@@ -25,9 +30,11 @@ public:
 
     static void turnOff();
 
-    static void setBrightness(uint8_t brightness);
+    static void blink(unsigned long rate);
 
-    static void ledcAnalogWrite(uint8_t channel, uint32_t value, uint32_t valueMax = 255);
+    static void noBlink();
+
+    static void setBrightness(uint8_t brightness);
 };
 
 
