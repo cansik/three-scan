@@ -55,7 +55,7 @@ void ThreeScanApp::loop() {
 }
 
 void ThreeScanApp::startScan() {
-    StatusLed::blink(100);
+    StatusLed::blink(300);
     scanning = true;
     waitForSync = true;
     currentAngle = settings.getStartAngle();
@@ -103,11 +103,11 @@ void ThreeScanApp::startScan() {
     Serial.println("start scanning");
     sweep->startScanning();
     syncTimeoutTimer.reset();
-    StatusLed::blink(500);
+    StatusLed::turnOff();
 }
 
 void ThreeScanApp::endScan() {
-    StatusLed::blink(100);
+    StatusLed::blink(300);
     sweep->stopScanning();
     // todo: move slower
     servo->reset();
@@ -142,10 +142,12 @@ void ThreeScanApp::runScan() {
 
     // check sync timeout
     if (syncTimeoutTimer.elapsed()) {
+        StatusLed::blink(50);
         Serial.println("no sync received, try to start sweep again!");
         sweep->stopScanning();
         sweep->startScanning();
         delay(100);
+        StatusLed::noBlink();
     }
 
     // check if scan is ready
@@ -202,7 +204,7 @@ void ThreeScanApp::runScan() {
                 waitForSync = true;
                 sweep->stopScanning();
                 sweep->startScanning();
-                StatusLed::blink(500);
+                StatusLed::noBlink();
             }
         }
 
