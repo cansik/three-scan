@@ -8,7 +8,7 @@
 #include <cstdint>
 #include <driver/sweep/Sweep.h>
 
-#define THREE_SCAN_SETTINGS_VERSION 1006
+#define THREE_SCAN_SETTINGS_VERSION 1007
 
 
 struct AppSettings {
@@ -20,7 +20,7 @@ private:
 
     float endAngle = 180.0f;
 
-    float angleStep = 1.0f;
+    float angleStep = 0.25f;
 
     unsigned int sliceIterationCount = 1;
 
